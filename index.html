@@ -1073,12 +1073,20 @@
     document.querySelectorAll('.tab-btn').forEach(function(b){ b.setAttribute('aria-selected', b.dataset.tab === name ? 'true' : 'false'); });
   }
 
+  function clearChecksForBatch(batchId){
+    var prefix = batchId + '-';
+    Object.keys(state.checks).forEach(function(k){
+      if(k.indexOf(prefix) === 0) delete state.checks[k];
+    });
+  }
+
   function bindReroll(){
     var btn = document.getElementById('reroll-all');
     if(btn){
       btn.addEventListener('click', function(){
-        state.selection = pickN(4, state.selection);
-        state.checks = {};
+        var oldSelection = state.selection.slice();
+        state.selection = pickN(4, oldSelection);
+        oldSelection.forEach(clearChecksForBatch);
         saveState();
         renderApp();
       });
@@ -1086,9 +1094,10 @@
     document.querySelectorAll('[data-swap-slot]').forEach(function(btn){
       btn.addEventListener('click', function(){
         var slot = parseInt(this.dataset.swapSlot, 10);
+        var oldId = state.selection[slot];
         var replacement = pickN(1, state.selection)[0];
         state.selection[slot] = replacement;
-        state.checks = {};
+        clearChecksForBatch(oldId);
         saveState();
         renderApp();
       });
