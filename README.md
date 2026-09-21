@@ -4,6 +4,8 @@ Appli de batch cooking : une bibliothèque de 10 recettes, un tirage aléatoire 
 
 C'est une PWA (Progressive Web App) en HTML/CSS/JS pur, sans build ni dépendances — un simple site statique installable sur téléphone.
 
+Direction artistique reprise de Loverbox : fond `nuit` (#182b2e), cartes `papier` (#f7f0e4), accents `moutarde`/`brique`/`sauge`, titres en Fraunces italique, labels en IBM Plex Mono, texte courant en Inter.
+
 ## Installer sur son téléphone
 
 1. Active GitHub Pages pour ce dépôt (une seule fois) :
