@@ -241,7 +241,8 @@
     creme:{label:'Crème fraîche épaisse', note:'40 cl'},
     chorizo:{label:'Chorizo', note:'300 g'},
     ananas:{label:'Ananas frais ou en boîte', note:'1'},
-    parmesan:{label:'Parmesan râpé', note:'100 g'}
+    parmesan:{label:'Parmesan râpé', note:'100 g'},
+    tofu:{label:'Tofu ferme', note:'800 g'}
   };
 
   var STOCK = {
@@ -296,7 +297,7 @@
 
   var STOCK_CATS = ['Céréales & légumineuses','Pain & wraps','Sauces & condiments','Épices','Fruits secs, olives & surgelés','Base'];
 
-  // ---------- the 20 batches ----------
+  // ---------- the 25 batches ----------
   var BATCHES = [
   {
     id:'b1', theme:'Asiatique épicé', tags:['Poulet','Soja-gingembre','Riz'],
@@ -750,6 +751,114 @@
       {name:'Salade tiède éthiopienne', tags:['Lentilles','Poulet','Épinards'], text:'Lentilles, poulet, épinards, servis tièdes.'}
     ],
     conservation:{ frigo:['Bol éthiopien','Wrap éthiopien','Riz sauté éthiopien'], congelo:['Lentilles berbéré','Salade tiède éthiopienne'], note:'Les lentilles au berbéré se congèlent particulièrement bien.' }
+  },
+  {
+    id:'b21', theme:'Indien végé, tofu & épinards', tags:['Végé','Tofu','Curry'],
+    stock:['riz','lentilles','tomatesconcassees','curcuma','garammasala','cumin','coriandremoulue','huile','sel','poivre'],
+    frais:['tofu','epinards','oignon','ail','gingembre','citron','yaourt','concombre'],
+    prep:[
+      {id:'p1', tag:'Prép · 5 min', text:'Couper le tofu en cubes et l’éponger. Mariner avec curry, curcuma, huile.'},
+      {id:'p2', tag:'Prép · 10 min', text:'Émincer l’oignon, écraser l’ail et le gingembre.'},
+      {id:'p3', tag:'Plaque · 18 min', text:'Cuire le riz.', timer:1080, display:'18:00'},
+      {id:'p4', tag:'Plaque · 20 min', text:'Mijoter les lentilles avec les tomates concassées, curcuma, garam masala et cumin, façon dal.', timer:1200, display:'20:00'},
+      {id:'p5', tag:'Airfryer · 180 °C · 15 min', text:'Cuire le tofu mariné jusqu’à doré.', timer:900, display:'15:00'},
+      {id:'p6', tag:'Prép · 5 min', text:'Faire sauter rapidement les épinards à la poêle.'},
+      {id:'p7', tag:'Sauce · 5 min', text:'Raita : yaourt, concombre râpé, citron.'},
+      {id:'p8', tag:'Rangement · 10 min', text:'Répartir dans les boîtes.'}
+    ],
+    meals:[
+      {name:'Dal saag bowl', tags:['Riz','Dal de lentilles','Tofu'], text:'Riz, dal de lentilles, tofu curry doré, épinards, raita.', sauce:'raita yaourt-concombre'},
+      {name:'Dal seul', tags:['Lentilles','Riz','Épinards'], text:'Dal de lentilles, riz, épinards — 100 % végé, se congèle très bien.'},
+      {name:'Wrap indien végé', tags:['Tofu','Épinards'], text:'Tofu curry, épinards, raita, dans un wrap.', sauce:'raita'},
+      {name:'Riz sauté végé', tags:['Riz','Légumes restants','Tofu'], text:'Riz et légumes restants sautés, tofu émietté, épices.'},
+      {name:'Salade tiède indienne végé', tags:['Dal','Tofu','Épinards'], text:'Dal de lentilles, tofu, épinards, raita.'}
+    ],
+    conservation:{ frigo:['Dal saag bowl','Wrap indien végé','Riz sauté végé'], congelo:['Dal seul','Salade tiède indienne végé'], note:'La raita reste toujours à part, ajoutée au moment de manger.' }
+  },
+  {
+    id:'b22', theme:'Méditerranéen végé, falafel & houmous', tags:['Végé','Falafel','Houmous'],
+    stock:['semoule','poischiches','tahini','pitas','cumin','coriandremoulue','huileolive','huile','sel','poivre'],
+    frais:['oignon','ail','citron','persil','poivrons','concombre'],
+    prep:[
+      {id:'p1', tag:'Prép · 15 min', text:'Mixer une partie des pois chiches avec oignon, ail, persil, cumin et coriandre. Façonner en petites boulettes (falafels).'},
+      {id:'p2', tag:'Prép · 10 min', text:'Couper les poivrons, réserver le concombre cru.'},
+      {id:'p3', tag:'Four · 25 min', text:'Enfourner les poivrons avec huile d’olive.', timer:1500, display:'25:00'},
+      {id:'p4', tag:'Airfryer · 180 °C · 15 min', text:'Cuire les falafels.', timer:900, display:'15:00'},
+      {id:'p5', tag:'Plaque · 10 min', text:'Préparer la semoule : eau bouillante, couvrir, laisser gonfler.', timer:600, display:'10:00'},
+      {id:'p6', tag:'Sauce · 5 min', text:'Houmous : le reste des pois chiches, tahini, citron, ail.'},
+      {id:'p7', tag:'Rangement · 10 min', text:'Répartir dans les boîtes.'}
+    ],
+    meals:[
+      {name:'Bol falafel', tags:['Semoule','Falafels','Houmous'], text:'Semoule, falafels, poivrons rôtis, houmous, concombre.', sauce:'houmous maison'},
+      {name:'Houmous & légumes rôtis', tags:['Houmous','Poivrons','Semoule'], text:'Houmous, poivrons rôtis, concombre, semoule — marche très bien sans falafels aussi.'},
+      {name:'Pain pita falafel', tags:['Falafels','Concombre','Houmous'], text:'Falafels, concombre, houmous, dans un pain pita.'},
+      {name:'Semoule sautée végé', tags:['Semoule','Légumes restants','Falafels'], text:'Semoule et légumes restants, falafels émiettés.'},
+      {name:'Salade tiède falafel', tags:['Poivrons rôtis','Falafels','Houmous'], text:'Poivrons rôtis, falafels, concombre, houmous.'}
+    ],
+    conservation:{ frigo:['Bol falafel','Pain pita falafel','Semoule sautée végé'], congelo:['Houmous & légumes rôtis','Salade tiède falafel'], note:'Falafels déjà cuits : ils se congèlent très bien. Concombre et houmous restent toujours frais, ajoutés au moment de manger.' }
+  },
+  {
+    id:'b23', theme:'Italien végé, champignons & parmesan', tags:['Végé','Champignons','Pâtes'],
+    stock:['pates','huileolive','huile','sel','poivre'],
+    frais:['champignons','oignon','ail','creme','parmesan','epinards'],
+    prep:[
+      {id:'p1', tag:'Prép · 10 min', text:'Émincer les champignons et l’oignon.'},
+      {id:'p2', tag:'Four · 20 min', text:'Enfourner les champignons avec huile d’olive et sel.', timer:1200, display:'20:00'},
+      {id:'p3', tag:'Plaque · 12 min', text:'Cuire les pâtes.', timer:720, display:'12:00'},
+      {id:'p4', tag:'Plaque · 10 min', text:'Faire revenir l’oignon, ajouter la crème et le parmesan, mijoter en sauce crémeuse.', timer:600, display:'10:00'},
+      {id:'p5', tag:'Prép · 5 min', text:'Faire sauter rapidement les épinards à la poêle.'},
+      {id:'p6', tag:'Rangement · 10 min', text:'Répartir dans les boîtes, garder un peu de parmesan à part.'}
+    ],
+    meals:[
+      {name:'Pâtes crémeuses aux champignons', tags:['Pâtes','Champignons','Parmesan'], text:'Pâtes, sauce crème-parmesan, champignons rôtis, épinards.'},
+      {name:'Bol sans pâtes', tags:['Champignons','Épinards','Parmesan'], text:'Champignons rôtis, épinards, sauce crème-parmesan — version plus légère.'},
+      {name:'Gratin végé', tags:['Pâtes','Champignons','Parmesan'], text:'Pâtes, sauce, champignons, parmesan, quelques minutes sous le grill du four.'},
+      {name:'Pâtes sautées végé', tags:['Pâtes','Légumes restants','Parmesan'], text:'Pâtes et légumes restants sautés, un peu de parmesan.'},
+      {name:'Salade tiède italienne végé', tags:['Champignons rôtis','Épinards','Parmesan'], text:'Champignons rôtis, épinards, parmesan, filet d’huile d’olive.'}
+    ],
+    conservation:{ frigo:['Pâtes crémeuses aux champignons','Gratin végé','Pâtes sautées végé'], congelo:['Bol sans pâtes','Salade tiède italienne végé'], note:'La sauce à la crème se congèle moins bien : garde-en une part à part et allonge-la d’un peu de crème fraîche à la décongélation.' }
+  },
+  {
+    id:'b24', theme:'Mexicain végé, haricots noirs & avocat', tags:['Végé','Haricots noirs','Avocat'],
+    stock:['riz','haricotsnoirs','mais','cumin','chilipoudre','paprikafume','huile','sel','poivre'],
+    frais:['avocat','oignonrouge','ail','citronsverts','coriandre','yaourt'],
+    prep:[
+      {id:'p1', tag:'Prép · 10 min', text:'Émincer l’oignon rouge.'},
+      {id:'p2', tag:'Plaque · 18 min', text:'Cuire le riz.', timer:1080, display:'18:00'},
+      {id:'p3', tag:'Plaque · 10 min', text:'Réchauffer les haricots noirs et le maïs avec cumin, chili et paprika fumé.', timer:600, display:'10:00'},
+      {id:'p4', tag:'Sauce · 5 min', text:'Crema végé : yaourt, citron vert, coriandre.'},
+      {id:'p5', tag:'Rangement · 10 min', text:'Répartir dans les boîtes. Garder l’avocat à part.'}
+    ],
+    meals:[
+      {name:'Bol mexicain végé', tags:['Riz','Haricots noirs','Avocat'], text:'Riz, haricots noirs épicés, maïs, avocat, crema.', sauce:'crema yaourt-citron vert'},
+      {name:'Chili végé', tags:['Haricots noirs','Maïs','Épices'], text:'Haricots noirs, maïs, épices, riz à part — se congèle très bien.'},
+      {name:'Wrap mexicain végé', tags:['Haricots noirs','Avocat'], text:'Haricots noirs, avocat, crema, dans un wrap.'},
+      {name:'Riz sauté mexicain végé', tags:['Riz','Haricots noirs','Maïs'], text:'Riz, haricots noirs et maïs sautés ensemble.'},
+      {name:'Salade tiède mexicaine végé', tags:['Haricots noirs','Maïs','Avocat'], text:'Haricots noirs, maïs, avocat, crema.'}
+    ],
+    conservation:{ frigo:['Bol mexicain végé','Wrap mexicain végé','Riz sauté mexicain végé'], congelo:['Chili végé','Salade tiède mexicaine végé (sans avocat)'], note:'Avocat et crema toujours ajoutés à la dernière minute, jamais congelés avec le reste.' }
+  },
+  {
+    id:'b25', theme:'Asiatique végé, tofu sésame-gingembre', tags:['Végé','Tofu','Sésame'],
+    stock:['riz','soja','huilesesame','miel','sriracha','edamame','huile','sel','poivre'],
+    frais:['tofu','brocoli','carottes','oignon','ail','gingembre','citronsverts'],
+    prep:[
+      {id:'p1', tag:'Prép · 5 min', text:'Couper le tofu en cubes, éponger. Préparer la marinade — soja, huile de sésame, miel, gingembre râpé, sriracha.'},
+      {id:'p2', tag:'Prép · 10 min', text:'Couper le brocoli et les carottes.'},
+      {id:'p3', tag:'Four · 20 min', text:'Enfourner le brocoli et les carottes avec un peu d’huile.', timer:1200, display:'20:00'},
+      {id:'p4', tag:'Plaque · 18 min', text:'Cuire le riz.', timer:1080, display:'18:00'},
+      {id:'p5', tag:'Plaque · 5 min', text:'Cuire les edamame surgelés à l’eau bouillante quelques minutes.', timer:300, display:'05:00'},
+      {id:'p6', tag:'Airfryer · 180 °C · 15 min', text:'Cuire le tofu mariné jusqu’à doré.', timer:900, display:'15:00'},
+      {id:'p7', tag:'Rangement · 10 min', text:'Répartir dans les boîtes.'}
+    ],
+    meals:[
+      {name:'Bol tofu sésame', tags:['Riz','Tofu sésame','Edamame'], text:'Riz, tofu sésame-gingembre, brocoli et carottes rôtis, edamame.', sauce:'soja-sésame-miel-gingembre'},
+      {name:'Bol edamame', tags:['Edamame','Brocoli','Riz'], text:'Edamame, brocoli, carottes, riz, un filet de sauce soja-sésame.'},
+      {name:'Wrap tofu', tags:['Tofu','Brocoli','Carottes'], text:'Tofu, brocoli, carottes, dans un wrap.'},
+      {name:'Riz sauté tofu', tags:['Riz','Légumes restants','Tofu'], text:'Riz, légumes restants et tofu sautés, sauce soja.'},
+      {name:'Salade tiède tofu', tags:['Brocoli','Carottes','Tofu'], text:'Brocoli, carottes, tofu, edamame, citron vert.'}
+    ],
+    conservation:{ frigo:['Bol tofu sésame','Wrap tofu','Riz sauté tofu'], congelo:['Bol edamame','Salade tiède tofu'], note:'Le tofu cuit se congèle bien ; à décongeler au frigo la veille.' }
   }
   ];
 
@@ -770,6 +879,7 @@
   function pickN(n, exclude){
     exclude = exclude || [];
     var pool = ALL_IDS.filter(function(id){ return exclude.indexOf(id) === -1; });
+    if(pool.length < n) pool = ALL_IDS.slice();
     return shuffle(pool).slice(0, n);
   }
 
@@ -811,7 +921,7 @@
       b.stock.forEach(function(id){ if(stockIds.indexOf(id) === -1) stockIds.push(id); });
     });
 
-    var html = '<div class="lineup"><h3>Ce mois-ci</h3><span class="sub">4 batchs tirés au sort parmi les 20 de la bibliothèque</span>';
+    var html = '<div class="lineup"><h3>Ce mois-ci</h3><span class="sub">4 batchs tirés au sort parmi les 25 de la bibliothèque</span>';
     html += '<div class="lineup-pills">';
     selectedBatches.forEach(function(b,i){ html += '<span class="lineup-pill">S'+(i+1)+' · '+esc(b.theme)+'</span>'; });
     html += '</div><button type="button" class="reroll-btn" id="reroll-all">Nouveau tirage</button></div>';
@@ -884,7 +994,7 @@
   }
 
   function renderLibPanel(){
-    var html = '<div class="week-header"><h2>Bibliothèque</h2><span class="theme">Les 20 batchs disponibles</span></div>';
+    var html = '<div class="week-header"><h2>Bibliothèque</h2><span class="theme">Les 25 batchs disponibles</span></div>';
     html += '<div class="lib-list">';
     BATCHES.forEach(function(b){
       var active = state.selection.indexOf(b.id) !== -1;
@@ -967,7 +1077,7 @@
     var btn = document.getElementById('reroll-all');
     if(btn){
       btn.addEventListener('click', function(){
-        state.selection = pickN(4);
+        state.selection = pickN(4, state.selection);
         state.checks = {};
         saveState();
         renderApp();

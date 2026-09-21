@@ -1,6 +1,6 @@
 # Cookbox
 
-Appli de batch cooking : une bibliothèque de 20 recettes (asiatique, méditerranéenne, italienne, française, américaine, sud-américaine, moyen-orientale...), un tirage aléatoire de 4 pour le mois, la liste de courses (stock + frais par semaine), la préparation étape par étape avec minuteurs, les repas de la semaine et le suivi frigo/congélateur.
+Appli de batch cooking : une bibliothèque de 25 recettes (asiatique, méditerranéenne, italienne, française, américaine, sud-américaine, moyen-orientale, dont 5 végé...), un tirage aléatoire de 4 pour le mois qui ne répète jamais le tirage précédent, la liste de courses (stock + frais par semaine), la préparation étape par étape avec minuteurs, les repas de la semaine et le suivi frigo/congélateur.
 
 C'est une PWA (Progressive Web App) en HTML/CSS/JS pur, sans build ni dépendances — un simple site statique installable sur téléphone.
 
