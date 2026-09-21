@@ -236,7 +236,12 @@
     champignons:{label:'Champignons de Paris', note:'500 g'},
     chourouge:{label:'Chou rouge', note:'une demie'},
     celeri:{label:'Céleri branche', note:'4 branches'},
-    basilicthai:{label:'Basilic thaï ou basilic frais', note:'facultatif'}
+    basilicthai:{label:'Basilic thaï ou basilic frais', note:'facultatif'},
+    pommesdeterre:{label:'Pommes de terre', note:'1,5 kg'},
+    creme:{label:'Crème fraîche épaisse', note:'40 cl'},
+    chorizo:{label:'Chorizo', note:'300 g'},
+    ananas:{label:'Ananas frais ou en boîte', note:'1'},
+    parmesan:{label:'Parmesan râpé', note:'100 g'}
   };
 
   var STOCK = {
@@ -250,6 +255,8 @@
     tomatesconcassees:{label:'Tomates concassées', note:'2 boîtes', cat:'Céréales & légumineuses'},
     laitcoco:{label:'Lait de coco', note:'2 boîtes', cat:'Céréales & légumineuses'},
     wraps:{label:'Wraps ou tortillas', note:'2 paquets', cat:'Pain & wraps'},
+    pitas:{label:'Pain pita ou naan', note:'2 paquets', cat:'Pain & wraps'},
+    pates:{label:'Pâtes courtes (penne, fusilli)', note:'500 g', cat:'Céréales & légumineuses'},
     soja:{label:'Sauce soja', cat:'Sauces & condiments'},
     sriracha:{label:'Sriracha ou gochujang', cat:'Sauces & condiments'},
     miel:{label:'Miel', cat:'Sauces & condiments'},
@@ -260,6 +267,8 @@
     saucepiquante:{label:'Sauce piquante', note:'chipotle ou tabasco, facultatif', cat:'Sauces & condiments'},
     vinaigre:{label:'Vinaigre (riz ou blanc)', cat:'Sauces & condiments'},
     saucepoisson:{label:'Sauce poisson (nuoc mâm)', note:'facultatif, sinon sauce soja', cat:'Sauces & condiments'},
+    moutarde:{label:'Moutarde de Dijon', cat:'Sauces & condiments'},
+    saucebbq:{label:'Sauce BBQ', cat:'Sauces & condiments'},
     curry:{label:'Curry en poudre', note:'ou pâte de curry rouge thaï', cat:'Épices'},
     paprikafume:{label:'Paprika fumé', cat:'Épices'},
     cumin:{label:'Cumin en poudre', cat:'Épices'},
@@ -270,6 +279,12 @@
     rashanout:{label:'Ras-el-hanout', cat:'Épices'},
     origan:{label:'Origan séché', cat:'Épices'},
     epicescajun:{label:'Épices cajun', note:'ou paprika + thym + origan + cayenne', cat:'Épices'},
+    paprikadoux:{label:'Paprika doux', cat:'Épices'},
+    safran:{label:'Safran', note:'ou curcuma + paprika fumé', cat:'Épices'},
+    sumac:{label:'Sumac', cat:'Épices'},
+    septepices:{label:'Mélange sept-épices libanais', note:'ou cannelle + piment de la Jamaïque + poivre', cat:'Épices'},
+    berbere:{label:'Berbéré (mélange éthiopien)', note:'ou paprika + piment + fenugrec', cat:'Épices'},
+    jerk:{label:'Assaisonnement jerk', note:'ou piment de la Jamaïque + thym + piment', cat:'Épices'},
     cacahuetes:{label:'Cacahuètes non salées', cat:'Fruits secs, olives & surgelés'},
     abricotssecs:{label:'Abricots secs', cat:'Fruits secs, olives & surgelés'},
     olives:{label:'Olives dénoyautées', cat:'Fruits secs, olives & surgelés'},
@@ -281,7 +296,7 @@
 
   var STOCK_CATS = ['Céréales & légumineuses','Pain & wraps','Sauces & condiments','Épices','Fruits secs, olives & surgelés','Base'];
 
-  // ---------- the 10 batches ----------
+  // ---------- the 20 batches ----------
   var BATCHES = [
   {
     id:'b1', theme:'Asiatique épicé', tags:['Poulet','Soja-gingembre','Riz'],
@@ -514,6 +529,227 @@
       {name:'Salade tiède teriyaki', tags:['Pickle chou rouge','Saumon','Edamame'], text:'Pickle de chou rouge-carottes, saumon, edamame, sauce teriyaki.'}
     ],
     conservation:{ frigo:['Bowl teriyaki','Wrap teriyaki','Riz sauté teriyaki'], congelo:['Saumon teriyaki seul','Salade tiède teriyaki'], note:'Pickle de chou rouge toujours à part, pour garder le croquant.' }
+  },
+  {
+    id:'b11', theme:'Italien, tomate-basilic-parmesan', tags:['Bœuf','Ragù','Pâtes'],
+    stock:['pates','tomatesconcassees','huileolive','origan','huile','sel','poivre'],
+    frais:['boeufhache','oignon','ail','carottes','celeri','courgettes','basilicthai','parmesan'],
+    prep:[
+      {id:'p1', tag:'Prép · 5 min', text:'Préchauffer le four à 200 °C. Hacher l’oignon, l’ail, les carottes et le céleri (mirepoix), couper les courgettes.'},
+      {id:'p2', tag:'Four · 25 min', text:'Enfourner les courgettes avec huile d’olive, origan et sel.', timer:1500, display:'25:00'},
+      {id:'p3', tag:'Plaque · 10 min', text:'Faire revenir le bœuf haché avec la mirepoix.', timer:600, display:'10:00'},
+      {id:'p4', tag:'Plaque · 25 min', text:'Ajouter les tomates concassées et l’origan, mijoter jusqu’à obtenir un ragù.', timer:1500, display:'25:00'},
+      {id:'p5', tag:'Plaque · 12 min', text:'Cuire les pâtes al dente.', timer:720, display:'12:00'},
+      {id:'p6', tag:'Prép · 5 min', text:'Râper le parmesan, ciseler le basilic.'},
+      {id:'p7', tag:'Rangement · 10 min', text:'Répartir dans les boîtes selon les 5 repas, garder le parmesan à part.'}
+    ],
+    meals:[
+      {name:'Pâtes au ragù', tags:['Pâtes','Ragù de bœuf','Courgettes'], text:'Pâtes, ragù de bœuf tomate-basilic, courgettes rôties, parmesan râpé au moment de servir.'},
+      {name:'Bol italien sans pâtes', tags:['Ragù de bœuf','Courgettes rôties','Parmesan'], text:'Ragù de bœuf, courgettes rôties, un filet d’huile d’olive, parmesan — version plus légère.'},
+      {name:'Gratin rapide', tags:['Pâtes','Ragù','Parmesan'], text:'Pâtes, ragù, parmesan, quelques minutes sous le grill du four jusqu’à gratiner.'},
+      {name:'Pâtes sautées', tags:['Pâtes','Légumes restants','Ragù'], text:'Pâtes et légumes restants sautés à la poêle avec le ragù, un peu de parmesan.'},
+      {name:'Salade tiède italienne', tags:['Courgettes rôties','Ragù','Basilic'], text:'Courgettes rôties, ragù de bœuf, parmesan, basilic frais.'}
+    ],
+    conservation:{ frigo:['Pâtes au ragù','Gratin rapide','Pâtes sautées'], congelo:['Bol italien sans pâtes','Salade tiède italienne'], note:'Le parmesan se garde toujours à part et s’ajoute au moment de manger, pour garder son croquant.' }
+  },
+  {
+    id:'b12', theme:'Français, moutarde & champignons', tags:['Poulet','Moutarde','Pommes de terre'],
+    stock:['moutarde','huile','sel','poivre'],
+    frais:['poulet','champignons','pommesdeterre','oignon','ail','creme','persil'],
+    prep:[
+      {id:'p1', tag:'Prép · 5 min', text:'Préchauffer le four à 200 °C. Couper les pommes de terre en morceaux.'},
+      {id:'p2', tag:'Four · 35 min', text:'Enfourner les pommes de terre avec huile, sel et poivre.', timer:2100, display:'35:00'},
+      {id:'p3', tag:'Prép · 10 min', text:'Émincer les champignons et l’oignon.'},
+      {id:'p4', tag:'Plaque · 10 min', text:'Faire dorer le poulet à la poêle, réserver.'},
+      {id:'p5', tag:'Plaque · 15 min', text:'Faire revenir champignons et oignon, ajouter la moutarde et la crème, mijoter avec le poulet.', timer:900, display:'15:00'},
+      {id:'p6', tag:'Prép · 5 min', text:'Ciseler le persil.'},
+      {id:'p7', tag:'Rangement · 10 min', text:'Répartir dans les boîtes.'}
+    ],
+    meals:[
+      {name:'Poulet forestier', tags:['Poulet','Champignons','Pommes de terre'], text:'Poulet, sauce champignons-moutarde-crème, pommes de terre rôties, persil.', sauce:'moutarde-crème-champignons'},
+      {name:'Bol sans crème', tags:['Poulet','Champignons','Pommes de terre'], text:'Poulet, champignons, pommes de terre rôties, un filet de moutarde — version plus légère, se congèle mieux.'},
+      {name:'Gratin de pommes de terre', tags:['Pommes de terre','Poulet','Moutarde'], text:'Pommes de terre écrasées, poulet émietté, sauce moutarde-champignons, quelques minutes au four.'},
+      {name:'Poêlée du frigo', tags:['Pommes de terre','Légumes restants','Poulet'], text:'Pommes de terre et légumes restants sautés, poulet émietté, moutarde.'},
+      {name:'Salade tiède française', tags:['Pommes de terre','Poulet','Champignons'], text:'Pommes de terre rôties, poulet, champignons, vinaigrette à la moutarde.'}
+    ],
+    conservation:{ frigo:['Poulet forestier','Gratin de pommes de terre','Poêlée du frigo'], congelo:['Bol sans crème','Salade tiède française'], note:'La sauce à la crème se congèle moins bien : garde-en une part à part et allonge-la d’un peu de crème fraîche à la décongélation.' }
+  },
+  {
+    id:'b13', theme:'Espagnol, chorizo & paprika', tags:['Poulet','Chorizo','Riz'],
+    stock:['riz','safran','paprikafume','huileolive','mais','huile','sel','poivre'],
+    frais:['poulet','chorizo','poivrons','oignon','ail','citron','persil'],
+    prep:[
+      {id:'p1', tag:'Prép · 5 min', text:'Préchauffer le four à 200 °C. Couper le poulet en morceaux, émincer le chorizo.'},
+      {id:'p2', tag:'Prép · 10 min', text:'Couper les poivrons et l’oignon.'},
+      {id:'p3', tag:'Four · 25 min', text:'Enfourner les poivrons et l’oignon avec huile d’olive et paprika fumé.', timer:1500, display:'25:00'},
+      {id:'p4', tag:'Plaque · 18 min', text:'Cuire le riz avec le safran (ou curcuma).', timer:1080, display:'18:00'},
+      {id:'p5', tag:'Plaque · 15 min', text:'Faire revenir le poulet et le chorizo à la poêle jusqu’à coloration.', timer:900, display:'15:00'},
+      {id:'p6', tag:'Plaque · 5 min', text:'Ajouter le maïs, mélanger avec le riz safrané.', timer:300, display:'05:00'},
+      {id:'p7', tag:'Prép · 5 min', text:'Presser le citron, ciseler le persil.'},
+      {id:'p8', tag:'Rangement · 10 min', text:'Répartir dans les boîtes.'}
+    ],
+    meals:[
+      {name:'Bol paella', tags:['Riz safrané','Poulet','Chorizo'], text:'Riz safrané, poulet, chorizo, poivrons rôtis, maïs, citron.'},
+      {name:'Poulet-chorizo seul', tags:['Poulet','Chorizo','Poivrons rôtis'], text:'Poulet, chorizo, poivrons rôtis, un filet de citron, riz à part.'},
+      {name:'Wrap espagnol', tags:['Poulet','Chorizo','Poivrons rôtis'], text:'Poulet, chorizo, poivrons rôtis, dans un wrap.'},
+      {name:'Riz sauté espagnol', tags:['Riz','Légumes restants','Chorizo'], text:'Riz et légumes restants sautés, poulet et chorizo émiettés.'},
+      {name:'Salade tiède espagnole', tags:['Poivrons rôtis','Poulet','Maïs'], text:'Poivrons rôtis, poulet, chorizo, maïs, persil, citron.'}
+    ],
+    conservation:{ frigo:['Bol paella','Wrap espagnol','Riz sauté espagnol'], congelo:['Poulet-chorizo seul','Salade tiède espagnole'], note:'Le riz safrané se congèle bien ; ajoute le citron frais seulement au moment de manger.' }
+  },
+  {
+    id:'b14', theme:'Portugais, piri-piri & citron', tags:['Poulet','Piri-piri','Riz'],
+    stock:['riz','paprikafume','chilipoudre','huileolive','huile','sel','poivre'],
+    frais:['poulet','poivrons','ail','citron','oignon','coriandre'],
+    prep:[
+      {id:'p1', tag:'Prép · 5 min', text:'Préchauffer le four à 200 °C. Mariner le poulet — ail écrasé, citron, paprika fumé, chili, huile d’olive (piri-piri maison).'},
+      {id:'p2', tag:'Prép · 10 min', text:'Couper les poivrons et l’oignon.'},
+      {id:'p3', tag:'Four · 25 min', text:'Enfourner les poivrons et l’oignon avec huile et paprika.', timer:1500, display:'25:00'},
+      {id:'p4', tag:'Plaque · 18 min', text:'Cuire le riz.', timer:1080, display:'18:00'},
+      {id:'p5', tag:'Airfryer · 180 °C · 20 min', text:'Cuire le poulet mariné, en 2 fournées si besoin.', timer:1200, display:'20:00'},
+      {id:'p6', tag:'Sauce · 5 min', text:'Sauce piri-piri : huile d’olive, citron, paprika, chili, ail.'},
+      {id:'p7', tag:'Rangement · 10 min', text:'Répartir dans les boîtes.'}
+    ],
+    meals:[
+      {name:'Bol piri-piri', tags:['Riz','Poulet piri-piri','Poivrons'], text:'Riz, poulet piri-piri, poivrons rôtis, sauce piri-piri.', sauce:'piri-piri maison'},
+      {name:'Poulet piri-piri seul', tags:['Poulet','Poivrons rôtis','Citron'], text:'Poulet piri-piri, poivrons rôtis, citron, sauce piri-piri à part.'},
+      {name:'Wrap portugais', tags:['Poulet','Poivrons rôtis'], text:'Poulet piri-piri, poivrons rôtis, sauce piri-piri, dans un wrap.', sauce:'piri-piri'},
+      {name:'Riz sauté portugais', tags:['Riz','Légumes restants','Poulet'], text:'Riz et légumes restants sautés, poulet émietté.'},
+      {name:'Salade tiède portugaise', tags:['Poivrons rôtis','Poulet','Citron'], text:'Poivrons rôtis, poulet, citron, sauce piri-piri.'}
+    ],
+    conservation:{ frigo:['Bol piri-piri','Wrap portugais','Riz sauté portugais'], congelo:['Poulet piri-piri seul','Salade tiède portugaise'], note:'Sauce piri-piri toujours ajoutée à part, au moment de manger.' }
+  },
+  {
+    id:'b15', theme:'Américain, BBQ fumé', tags:['Porc','BBQ','Patate douce'],
+    stock:['saucebbq','paprikafume','cumin','mais','huile','sel','poivre'],
+    frais:['porc','oignon','ail','patatedouce','chourouge','citronsverts'],
+    prep:[
+      {id:'p1', tag:'Prép · 5 min', text:'Préchauffer le four à 200 °C. Mélanger le porc avec paprika fumé, cumin, sel et un peu de sauce BBQ.'},
+      {id:'p2', tag:'Prép · 10 min', text:'Éplucher et couper les patates douces en cubes. Émincer le chou rouge.'},
+      {id:'p3', tag:'Four · 35 min', text:'Enfourner les patates douces avec huile, sel et paprika.', timer:2100, display:'35:00'},
+      {id:'p4', tag:'Plaque · 15 min', text:'Faire revenir le porc à la poêle jusqu’à coloration, ajouter la sauce BBQ et laisser réduire.', timer:900, display:'15:00'},
+      {id:'p5', tag:'Plaque · 5 min', text:'Réchauffer le maïs.', timer:300, display:'05:00'},
+      {id:'p6', tag:'Prép · 5 min', text:'Mélanger le chou rouge cru avec un filet de citron vert et du sel (slaw rapide).'},
+      {id:'p7', tag:'Rangement · 10 min', text:'Répartir dans les boîtes.'}
+    ],
+    meals:[
+      {name:'Bol BBQ', tags:['Porc BBQ','Patate douce','Slaw'], text:'Porc BBQ, patates douces rôties, maïs, slaw de chou rouge.'},
+      {name:'Porc BBQ seul', tags:['Porc BBQ','Patate douce','Slaw'], text:'Porc BBQ, patates douces, slaw à part.'},
+      {name:'Wrap BBQ', tags:['Porc BBQ','Slaw'], text:'Porc BBQ, slaw de chou rouge, dans un wrap.'},
+      {name:'Hash de patates douces', tags:['Patate douce','Porc BBQ','Poêle'], text:'Patates douces et porc BBQ sautés ensemble à la poêle, une touche de sauce BBQ.'},
+      {name:'Salade tiède BBQ', tags:['Patate douce','Porc BBQ','Maïs'], text:'Patates douces rôties, porc BBQ, maïs, slaw.'}
+    ],
+    conservation:{ frigo:['Bol BBQ','Wrap BBQ','Hash de patates douces'], congelo:['Porc BBQ seul','Salade tiède BBQ'], note:'Le slaw de chou rouge reste toujours cru et à part, ajouté au moment de manger pour garder son croquant.' }
+  },
+  {
+    id:'b16', theme:'Libanais, sept-épices & sumac', tags:['Bœuf','Sumac','Semoule'],
+    stock:['semoule','poischiches','tahini','septepices','sumac','pitas','huileolive','huile','sel','poivre'],
+    frais:['boeufhache','oignon','ail','citron','persil','yaourt'],
+    prep:[
+      {id:'p1', tag:'Prép · 5 min', text:'Préchauffer le four à 200 °C. Mélanger le bœuf haché avec sept-épices, ail écrasé et oignon râpé, façonner en boulettes.'},
+      {id:'p2', tag:'Four · 25 min', text:'Enfourner les pois chiches égouttés avec huile d’olive et sumac.', timer:1500, display:'25:00'},
+      {id:'p3', tag:'Plaque · 10 min', text:'Préparer la semoule : eau bouillante, couvrir, laisser gonfler.', timer:600, display:'10:00'},
+      {id:'p4', tag:'Airfryer · 180 °C · 15 min', text:'Cuire les boulettes de bœuf.', timer:900, display:'15:00'},
+      {id:'p5', tag:'Sauce · 5 min', text:'Sauce yaourt-citron-sumac.'},
+      {id:'p6', tag:'Prép · 5 min', text:'Ciseler le persil.'},
+      {id:'p7', tag:'Rangement · 10 min', text:'Répartir dans les boîtes.'}
+    ],
+    meals:[
+      {name:'Bol libanais', tags:['Semoule','Boulettes de bœuf','Pois chiches'], text:'Semoule, boulettes de bœuf, pois chiches au sumac, sauce yaourt-citron, persil.', sauce:'yaourt-citron-sumac'},
+      {name:'Pois chiches épicés', tags:['Pois chiches','Semoule','Tahini'], text:'Pois chiches au sumac, semoule, un filet de tahini.'},
+      {name:'Pain pita garni', tags:['Boulettes de bœuf','Pois chiches'], text:'Boulettes de bœuf, pois chiches, sauce yaourt-citron, dans un pain pita.', sauce:'yaourt-citron'},
+      {name:'Semoule sautée libanaise', tags:['Semoule','Légumes restants','Bœuf'], text:'Semoule et légumes restants, bœuf émietté, sept-épices.'},
+      {name:'Salade tiède libanaise', tags:['Pois chiches','Boulettes de bœuf','Persil'], text:'Pois chiches, boulettes de bœuf, persil, citron, sauce yaourt.'}
+    ],
+    conservation:{ frigo:['Bol libanais','Pain pita garni','Semoule sautée libanaise'], congelo:['Pois chiches épicés','Salade tiède libanaise'], note:'Sauce yaourt toujours ajoutée à part, au moment de manger.' }
+  },
+  {
+    id:'b17', theme:'Antillais, poulet jerk & ananas', tags:['Poulet','Jerk','Ananas'],
+    stock:['riz','haricotsrouges','jerk','huile','sel','poivre'],
+    frais:['poulet','ananas','poivrons','oignon','ail','citronsverts','coriandre'],
+    prep:[
+      {id:'p1', tag:'Prép · 5 min', text:'Mariner le poulet — assaisonnement jerk, ail, citron vert, huile.'},
+      {id:'p2', tag:'Prép · 10 min', text:'Couper les poivrons, l’oignon et l’ananas.'},
+      {id:'p3', tag:'Four · 25 min', text:'Enfourner les poivrons, l’oignon et l’ananas avec un peu d’huile.', timer:1500, display:'25:00'},
+      {id:'p4', tag:'Plaque · 18 min', text:'Cuire le riz avec les haricots rouges (riz-and-peas).', timer:1080, display:'18:00'},
+      {id:'p5', tag:'Airfryer · 180 °C · 20 min', text:'Cuire le poulet mariné.', timer:1200, display:'20:00'},
+      {id:'p6', tag:'Prép · 5 min', text:'Ciseler la coriandre, presser un citron vert.'},
+      {id:'p7', tag:'Rangement · 10 min', text:'Répartir dans les boîtes.'}
+    ],
+    meals:[
+      {name:'Bol antillais', tags:['Riz-and-peas','Poulet jerk','Ananas'], text:'Riz-and-peas, poulet jerk, ananas et poivrons rôtis, coriandre.'},
+      {name:'Poulet jerk seul', tags:['Poulet jerk','Ananas rôti','Riz'], text:'Poulet jerk, ananas rôti, riz à part.'},
+      {name:'Wrap jerk', tags:['Poulet jerk','Ananas','Poivrons'], text:'Poulet jerk, ananas, poivrons rôtis, dans un wrap.'},
+      {name:'Riz sauté antillais', tags:['Riz','Légumes restants','Poulet'], text:'Riz et légumes restants sautés, poulet émietté, une pointe de jerk.'},
+      {name:'Salade tiède antillaise', tags:['Haricots rouges','Ananas rôti','Poulet'], text:'Haricots rouges, ananas rôti, poulet, coriandre, citron vert.'}
+    ],
+    conservation:{ frigo:['Bol antillais','Wrap jerk','Riz sauté antillais'], congelo:['Poulet jerk seul','Salade tiède antillaise'], note:'L’ananas rôti se congèle très bien avec le reste, contrairement à l’ananas cru.' }
+  },
+  {
+    id:'b18', theme:'Péruvien, citron vert & ail', tags:['Poulet','Citron vert','Avocat'],
+    stock:['riz','mais','cumin','paprikafume','huile','sel','poivre'],
+    frais:['poulet','ail','citronsverts','coriandre','avocat','oignonrouge','yaourt'],
+    prep:[
+      {id:'p1', tag:'Prép · 5 min', text:'Préchauffer le four à 200 °C. Mariner le poulet — ail écrasé, citron vert, cumin, paprika fumé, huile.'},
+      {id:'p2', tag:'Prép · 10 min', text:'Émincer l’oignon rouge.'},
+      {id:'p3', tag:'Plaque · 18 min', text:'Cuire le riz.', timer:1080, display:'18:00'},
+      {id:'p4', tag:'Plaque · 10 min', text:'Réchauffer le maïs avec un peu de cumin.', timer:600, display:'10:00'},
+      {id:'p5', tag:'Airfryer · 180 °C · 20 min', text:'Cuire le poulet mariné, en 2 fournées si besoin.', timer:1200, display:'20:00'},
+      {id:'p6', tag:'Sauce · 5 min', text:'Crema péruvienne : yaourt, citron vert, ail, coriandre.'},
+      {id:'p7', tag:'Rangement · 10 min', text:'Répartir dans les boîtes. Garder l’avocat à part.'}
+    ],
+    meals:[
+      {name:'Bol péruvien', tags:['Riz','Poulet citron vert-ail','Avocat'], text:'Riz, poulet citron vert-ail, maïs, avocat, crema.', sauce:'crema yaourt-citron vert'},
+      {name:'Poulet seul', tags:['Poulet','Maïs','Oignon rouge'], text:'Poulet, maïs, oignon rouge émincé, crema.'},
+      {name:'Wrap péruvien', tags:['Poulet','Avocat','Crema'], text:'Poulet, avocat, crema, dans un wrap.'},
+      {name:'Riz sauté péruvien', tags:['Riz','Maïs','Poulet'], text:'Riz, maïs et poulet émietté sautés.'},
+      {name:'Salade tiède péruvienne', tags:['Poulet','Maïs','Avocat'], text:'Poulet, maïs, oignon rouge, avocat ajouté au moment de manger, crema.'}
+    ],
+    conservation:{ frigo:['Bol péruvien','Wrap péruvien','Riz sauté péruvien'], congelo:['Poulet seul','Salade tiède péruvienne (sans avocat)'], note:'Avocat et crema toujours ajoutés à la dernière minute, jamais congelés avec le reste.' }
+  },
+  {
+    id:'b19', theme:'Hongrois, paprika (goulash)', tags:['Bœuf','Paprika','Pâtes'],
+    stock:['pates','paprikadoux','paprikafume','tomatesconcassees','huile','sel','poivre'],
+    frais:['boeufhache','poivrons','oignon','ail','creme','persil'],
+    prep:[
+      {id:'p1', tag:'Prép · 5 min', text:'Assaisonner le bœuf haché avec paprika doux, paprika fumé et ail.'},
+      {id:'p2', tag:'Prép · 10 min', text:'Couper les poivrons et l’oignon.'},
+      {id:'p3', tag:'Four · 25 min', text:'Enfourner les poivrons et l’oignon avec huile et paprika.', timer:1500, display:'25:00'},
+      {id:'p4', tag:'Plaque · 12 min', text:'Cuire les pâtes.', timer:720, display:'12:00'},
+      {id:'p5', tag:'Plaque · 20 min', text:'Faire revenir le bœuf haché, ajouter les tomates concassées et le paprika, mijoter en goulash.', timer:1200, display:'20:00'},
+      {id:'p6', tag:'Prép · 5 min', text:'Ciseler le persil.'},
+      {id:'p7', tag:'Rangement · 10 min', text:'Répartir dans les boîtes, une cuillère de crème fraîche par portion si envie.'}
+    ],
+    meals:[
+      {name:'Goulash bowl', tags:['Pâtes','Goulash de bœuf','Poivrons'], text:'Pâtes, goulash de bœuf, poivrons rôtis, une touche de crème, persil.'},
+      {name:'Goulash seul', tags:['Goulash de bœuf','Poivrons rôtis','Crème'], text:'Goulash de bœuf, poivrons rôtis, crème à part — sans pâtes, plus léger.'},
+      {name:'Wrap hongrois', tags:['Goulash de bœuf','Poivrons rôtis'], text:'Goulash de bœuf, poivrons rôtis, dans un wrap.'},
+      {name:'Pâtes sautées hongroises', tags:['Pâtes','Légumes restants','Bœuf'], text:'Pâtes et légumes restants sautés, bœuf émietté, paprika.'},
+      {name:'Salade tiède hongroise', tags:['Poivrons rôtis','Goulash de bœuf','Persil'], text:'Poivrons rôtis, goulash de bœuf, persil, une touche de crème.'}
+    ],
+    conservation:{ frigo:['Goulash bowl','Wrap hongrois','Pâtes sautées hongroises'], congelo:['Goulash seul','Salade tiède hongroise'], note:'Le goulash se congèle très bien ; la crème fraîche s’ajoute toujours fraîche, au moment de servir.' }
+  },
+  {
+    id:'b20', theme:'Éthiopien, berbéré & lentilles', tags:['Poulet','Lentilles','Berbéré'],
+    stock:['lentilles','riz','berbere','curcuma','huile','sel','poivre'],
+    frais:['poulet','oignon','ail','gingembre','citron','epinards'],
+    prep:[
+      {id:'p1', tag:'Prép · 5 min', text:'Mariner le poulet — berbéré, ail, gingembre, citron, huile.'},
+      {id:'p2', tag:'Prép · 10 min', text:'Émincer l’oignon.'},
+      {id:'p3', tag:'Plaque · 18 min', text:'Cuire le riz.', timer:1080, display:'18:00'},
+      {id:'p4', tag:'Plaque · 20-25 min', text:'Mijoter les lentilles avec l’oignon, le berbéré et le curcuma.', timer:1200, display:'20:00'},
+      {id:'p5', tag:'Airfryer · 180 °C · 20 min', text:'Cuire le poulet mariné.', timer:1200, display:'20:00'},
+      {id:'p6', tag:'Prép · 5 min', text:'Faire sauter rapidement les épinards à la poêle.'},
+      {id:'p7', tag:'Rangement · 10 min', text:'Répartir dans les boîtes.'}
+    ],
+    meals:[
+      {name:'Bol éthiopien', tags:['Riz','Poulet berbéré','Lentilles'], text:'Riz, poulet berbéré, lentilles épicées, épinards.'},
+      {name:'Lentilles berbéré', tags:['Lentilles','Riz','Épinards'], text:'Lentilles épicées, riz, épinards — se congèle très bien.'},
+      {name:'Wrap éthiopien', tags:['Poulet berbéré','Épinards'], text:'Poulet berbéré, épinards, dans un wrap.'},
+      {name:'Riz sauté éthiopien', tags:['Riz','Légumes restants','Poulet'], text:'Riz et légumes restants sautés, poulet émietté, berbéré.'},
+      {name:'Salade tiède éthiopienne', tags:['Lentilles','Poulet','Épinards'], text:'Lentilles, poulet, épinards, servis tièdes.'}
+    ],
+    conservation:{ frigo:['Bol éthiopien','Wrap éthiopien','Riz sauté éthiopien'], congelo:['Lentilles berbéré','Salade tiède éthiopienne'], note:'Les lentilles au berbéré se congèlent particulièrement bien.' }
   }
   ];
 
@@ -575,7 +811,7 @@
       b.stock.forEach(function(id){ if(stockIds.indexOf(id) === -1) stockIds.push(id); });
     });
 
-    var html = '<div class="lineup"><h3>Ce mois-ci</h3><span class="sub">4 batchs tirés au sort parmi les 10 de la bibliothèque</span>';
+    var html = '<div class="lineup"><h3>Ce mois-ci</h3><span class="sub">4 batchs tirés au sort parmi les 20 de la bibliothèque</span>';
     html += '<div class="lineup-pills">';
     selectedBatches.forEach(function(b,i){ html += '<span class="lineup-pill">S'+(i+1)+' · '+esc(b.theme)+'</span>'; });
     html += '</div><button type="button" class="reroll-btn" id="reroll-all">Nouveau tirage</button></div>';
@@ -648,7 +884,7 @@
   }
 
   function renderLibPanel(){
-    var html = '<div class="week-header"><h2>Bibliothèque</h2><span class="theme">Les 10 batchs disponibles</span></div>';
+    var html = '<div class="week-header"><h2>Bibliothèque</h2><span class="theme">Les 20 batchs disponibles</span></div>';
     html += '<div class="lib-list">';
     BATCHES.forEach(function(b){
       var active = state.selection.indexOf(b.id) !== -1;
