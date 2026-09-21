@@ -1,0 +1,32 @@
+{
+  "name": "Cookbox",
+  "short_name": "Cookbox",
+  "description": "Batch cooking : rotation de 10 recettes, courses, préparation minutée et repas de la semaine.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#EFF2E9",
+  "theme_color": "#EFF2E9",
+  "orientation": "portrait",
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

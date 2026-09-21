@@ -1,0 +1,846 @@
+<!doctype html><html lang="fr"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<title>Cookbox</title>
+<meta name="description" content="Batch cooking : rotation de 10 recettes, courses, préparation minutée et repas de la semaine.">
+<meta name="theme-color" content="#EFF2E9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15180F" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Cookbox">
+</head><body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#EFF2E9;
+    --surface:#FFFFFF;
+    --surface-2:#F7F9F2;
+    --ink:#20241D;
+    --muted:#656B5A;
+    --line:#DCE1D2;
+    --chili:#B7392A;
+    --chili-ink:#FFFFFF;
+    --turmeric:#B87A16;
+    --turmeric-ink:#FFFFFF;
+    --jade:#3C7A5D;
+    --jade-ink:#FFFFFF;
+    --shadow: 0 1px 2px rgba(32,36,29,0.06), 0 8px 20px -12px rgba(32,36,29,0.18);
+    scroll-behavior:smooth;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#15180F; --surface:#1D2216; --surface-2:#20261A; --ink:#ECEAE0; --muted:#A3A895; --line:#333A28;
+      --chili:#E1614C; --chili-ink:#1B1006; --turmeric:#E3A83E; --turmeric-ink:#221802; --jade:#5FAE86; --jade-ink:#08170F;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -14px rgba(0,0,0,0.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#15180F; --surface:#1D2216; --surface-2:#20261A; --ink:#ECEAE0; --muted:#A3A895; --line:#333A28;
+    --chili:#E1614C; --chili-ink:#1B1006; --turmeric:#E3A83E; --turmeric-ink:#221802; --jade:#5FAE86; --jade-ink:#08170F;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -14px rgba(0,0,0,0.6);
+  }
+
+  *{ box-sizing:border-box; }
+  body{ background:var(--bg); color:var(--ink); font-family:'IBM Plex Sans','Helvetica Neue',Arial,sans-serif; font-variant-numeric: tabular-nums; }
+  h1,h2,h3,.display{ font-family:'Bricolage Grotesque','Arial Black',sans-serif; text-wrap:balance; letter-spacing:-0.01em; }
+
+  .shell{ max-width:640px; margin:0 auto; padding-inline:18px; padding-block: 18px 64px; }
+
+  header.top{
+    position:sticky; top: env(safe-area-inset-top, 0px); z-index:10;
+    background:var(--bg); padding-block: 14px 10px; margin-inline: -18px; padding-inline: 18px;
+    border-bottom:1px solid var(--line);
+  }
+  .title-row{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:12px; }
+  .title-row h1{ font-size:1.5rem; font-weight:800; margin:0; }
+  .title-row .kicker{ display:block; font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:0.68rem; letter-spacing:0.09em; text-transform:uppercase; color:var(--chili); margin-bottom:2px; }
+  .reset-btn{ border:1px solid var(--line); background:var(--surface); color:var(--muted); font-size:0.72rem; font-weight:500; padding:6px 10px; border-radius:7px; cursor:pointer; white-space:nowrap; font-family:'IBM Plex Sans',sans-serif; }
+  .reset-btn:hover{ color:var(--ink); border-color:var(--muted); }
+  .reset-confirm{ display:flex; align-items:center; gap:8px; font-size:0.72rem; color:var(--muted); }
+  .reset-confirm button{ border:1px solid var(--line); background:var(--surface); color:var(--ink); font-size:0.72rem; padding:5px 9px; border-radius:6px; cursor:pointer; font-family:'IBM Plex Sans',sans-serif; }
+  .reset-confirm button.danger{ border-color:var(--chili); color:var(--chili); }
+
+  .tabs{ display:flex; gap:1px; }
+  .tab-btn{
+    flex:1; appearance:none; border:none; background:transparent; color:var(--muted);
+    font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:0.68rem;
+    padding:9px 1px 10px; border-bottom:3px solid transparent; cursor:pointer; text-align:center;
+  }
+  .tab-btn[aria-selected="true"]{ color:var(--ink); border-bottom-color:var(--ink); }
+  .tab-btn[data-tab="stock"][aria-selected="true"]{ border-bottom-color:var(--chili); }
+  .tab-btn[data-tab="lib"][aria-selected="true"]{ border-bottom-color:var(--jade); }
+  .tab-btn:focus-visible{ outline:2px solid var(--chili); outline-offset:2px; }
+
+  .panel{ padding-top:18px; }
+
+  .lineup{ background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px 15px 15px; margin-bottom:18px; }
+  .lineup h3{ font-size:0.85rem; margin:0 0 2px; }
+  .lineup .sub{ font-size:0.72rem; color:var(--muted); display:block; margin-bottom:11px; }
+  .lineup-pills{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
+  .lineup-pill{ font-size:0.74rem; font-weight:600; background:var(--surface-2); border:1px solid var(--line); padding:5px 10px; border-radius:99px; }
+  .reroll-btn{
+    border:1px solid var(--jade); background:var(--jade); color:var(--jade-ink); font-size:0.76rem; font-weight:600;
+    padding:8px 14px; border-radius:8px; cursor:pointer; font-family:'IBM Plex Sans',sans-serif;
+  }
+
+  .week-header{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:6px; }
+  .week-header h2{ font-size:1.1rem; font-weight:700; margin:0 0 2px; }
+  .week-header .theme{ font-size:0.78rem; color:var(--jade); font-weight:600; }
+  .swap-btn{
+    flex:none; border:1px solid var(--line); background:var(--surface-2); color:var(--muted); font-size:0.68rem; font-weight:600;
+    padding:5px 10px; border-radius:7px; cursor:pointer; white-space:nowrap; font-family:'IBM Plex Sans',sans-serif; margin-top:2px;
+  }
+  .swap-btn:hover{ color:var(--ink); border-color:var(--muted); }
+
+  .quicknav{ display:flex; gap:6px; flex-wrap:wrap; margin:12px 0 20px; }
+  .quicknav a{ font-size:0.7rem; font-weight:500; color:var(--muted); background:var(--surface-2); border:1px solid var(--line); padding:4px 10px; border-radius:99px; text-decoration:none; }
+  .week-section{ scroll-margin-top: 100px; margin-bottom: 26px; }
+  .week-section:last-child{ margin-bottom:0; }
+
+  .progress{ display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+  .progress-track{ flex:1; height:6px; border-radius:99px; background:var(--line); overflow:hidden; }
+  .progress-fill{ height:100%; border-radius:99px; width:0%; transition:width .25s ease; }
+  .fill-chili{ background:var(--chili); }
+  .fill-turmeric{ background:var(--turmeric); }
+  .progress-label{ font-size:0.72rem; color:var(--muted); font-weight:500; white-space:nowrap; }
+
+  .section-title{ font-size:0.72rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin: 0 0 8px; }
+  .stock-cat{ margin: 20px 0 8px; }
+  .stock-cat:first-child{ margin-top:0; }
+
+  .list{ display:flex; flex-direction:column; background:var(--surface); border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+  .item{ display:flex; align-items:center; gap:11px; padding:11px 13px; border-bottom:1px solid var(--line); cursor:pointer; -webkit-tap-highlight-color:transparent; }
+  .item:last-child{ border-bottom:none; }
+  .item input{ position:absolute; opacity:0; width:1px;height:1px; }
+  .box{ flex:none; width:19px;height:19px; border-radius:5px; border:2px solid var(--line); background:var(--surface); display:flex; align-items:center; justify-content:center; }
+  .box svg{ width:12px;height:12px; opacity:0; transform:scale(.6); transition:opacity .12s, transform .12s; }
+  .item input:checked + .box{ background:var(--chili); border-color:var(--chili); }
+  .item input:checked + .box svg{ opacity:1; transform:scale(1); }
+  .list.prep-check .item input:checked + .box{ background:var(--turmeric); border-color:var(--turmeric); }
+  .item input:focus-visible + .box{ outline:2px solid var(--chili); outline-offset:2px; }
+  .item .text{ font-size:0.9rem; line-height:1.35; }
+  .item input:checked ~ .text{ color:var(--muted); text-decoration:line-through; text-decoration-thickness:1px; }
+  .item .note{ display:block; font-size:0.76rem; color:var(--muted); margin-top:1px; }
+
+  .step{ padding:13px 13px 14px; border-bottom:1px solid var(--line); }
+  .step:last-child{ border-bottom:none; }
+  .step-head{ display:flex; align-items:flex-start; gap:11px; }
+  .step-num{ flex:none; width:22px;height:22px; border-radius:99px; background:var(--surface-2); border:1px solid var(--line); display:flex;align-items:center;justify-content:center; font-size:0.68rem; font-weight:600; color:var(--muted); margin-top:1px; }
+  .step-body{ flex:1; min-width:0; }
+  .step-tag{ display:inline-block; font-size:0.64rem; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--turmeric); margin-bottom:3px; }
+  .step-text{ font-size:0.9rem; line-height:1.4; }
+  .step.done .step-text{ color:var(--muted); }
+  .step.done .step-num{ background:var(--turmeric); border-color:var(--turmeric); color:var(--turmeric-ink); }
+
+  .timer{ display:flex; align-items:center; gap:8px; margin-top:9px; }
+  .timer-display{ font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:0.82rem; min-width:3.6em; color:var(--ink); }
+  .timer.done .timer-display{ color:var(--chili); }
+  .timer-btn{ border:1px solid var(--line); background:var(--surface-2); color:var(--ink); font-size:0.72rem; font-weight:600; padding:5px 11px; border-radius:7px; cursor:pointer; font-family:'IBM Plex Sans',sans-serif; }
+  .timer-btn.ghost{ background:transparent; color:var(--muted); font-weight:500; padding:5px 8px; }
+  .timer.running .timer-btn[data-action="toggle"]{ background:var(--turmeric); border-color:var(--turmeric); color:var(--turmeric-ink); }
+
+  .step-check{ flex:none; align-self:flex-start; }
+
+  .cards{ display:flex; flex-direction:column; gap:12px; }
+  .card{ background:var(--surface); border:1px solid var(--line); border-left:4px solid var(--jade); border-radius:10px; padding:14px 15px 15px; box-shadow:var(--shadow); }
+  .card h3{ font-size:1.02rem; font-weight:700; margin:0 0 7px; }
+  .tags{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:9px; }
+  .tag{ font-size:0.7rem; font-weight:500; background:var(--surface-2); border:1px solid var(--line); color:var(--muted); padding:3px 8px; border-radius:99px; }
+  .card p{ font-size:0.85rem; line-height:1.45; margin:0; color:var(--ink); }
+  .card .sauce{ display:block; margin-top:7px; font-size:0.78rem; color:var(--muted); }
+  .card .sauce b{ color:var(--jade); font-weight:600; }
+
+  .cons-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
+  @media (max-width:420px){ .cons-grid{ grid-template-columns:1fr; } }
+  .cons-col{ background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:13px 14px; }
+  .cons-col h3{ font-size:0.85rem; margin:0 0 3px; }
+  .cons-col .span{ font-size:0.7rem; color:var(--muted); display:block; margin-bottom:9px; }
+  .cons-col ul{ margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:7px; }
+  .cons-col li{ font-size:0.85rem; line-height:1.35; padding-left:13px; position:relative; }
+  .cons-col li::before{ content:""; position:absolute; left:0; top:0.5em; width:5px;height:5px; border-radius:99px; }
+  .cons-col.frigo li::before{ background:var(--turmeric); }
+  .cons-col.congelo li::before{ background:var(--jade); }
+
+  .callout{ background:var(--surface-2); border:1px solid var(--line); border-left:3px solid var(--chili); border-radius:8px; padding:11px 13px; font-size:0.83rem; line-height:1.5; margin-top: 10px; }
+  .callout:first-child{ margin-top:0; }
+  .callout b{ color:var(--chili); }
+  .callout.turm{ border-left-color:var(--turmeric); }
+  .callout.turm b{ color:var(--turmeric); }
+
+  .lib-list{ display:flex; flex-direction:column; gap:10px; }
+  .lib-item{ background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:12px 14px; display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
+  .lib-item.active{ border-color:var(--jade); }
+  .lib-main{ min-width:0; }
+  .lib-name{ font-weight:700; font-size:0.92rem; margin-bottom:5px; }
+  .lib-badge{ flex:none; font-size:0.64rem; font-weight:600; color:var(--jade-ink); background:var(--jade); padding:4px 9px; border-radius:99px; white-space:nowrap; }
+
+  [hidden]{ display:none !important; }
+</style>
+
+<div class="shell">
+  <header class="top">
+    <div class="title-row">
+      <div>
+        <span class="kicker">Batch cooking · rotation du mois</span>
+        <h1>Cookbox</h1>
+      </div>
+      <div id="reset-zone">
+        <button type="button" class="reset-btn" id="reset-open">Réinitialiser</button>
+      </div>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab-btn" role="tab" data-tab="stock" aria-selected="true">Stock</button>
+      <button class="tab-btn" role="tab" data-tab="s1" aria-selected="false">S1</button>
+      <button class="tab-btn" role="tab" data-tab="s2" aria-selected="false">S2</button>
+      <button class="tab-btn" role="tab" data-tab="s3" aria-selected="false">S3</button>
+      <button class="tab-btn" role="tab" data-tab="s4" aria-selected="false">S4</button>
+      <button class="tab-btn" role="tab" data-tab="lib" aria-selected="false">Biblio</button>
+    </nav>
+  </header>
+
+  <main id="app"></main>
+</div>
+
+<script>
+(function(){
+  var CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none"><path d="M4 12.5L9.5 18L20 6" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  // ---------- shared ingredient libraries ----------
+  var FRESH = {
+    poulet:{label:'Blancs de poulet', note:'1,4 kg'},
+    brocoli:{label:'Brocoli', note:'2'},
+    courgettes:{label:'Courgettes', note:'4'},
+    poivrons:{label:'Poivrons rouge et jaune', note:'4'},
+    patatedouce:{label:'Patates douces', note:'4'},
+    carottes:{label:'Carottes', note:'8'},
+    concombre:{label:'Concombre', note:'2'},
+    oignon:{label:'Oignon', note:'2'},
+    oignonrouge:{label:'Oignon rouge', note:'2'},
+    ail:{label:'Ail', note:'2 têtes'},
+    gingembre:{label:'Gingembre frais', note:'~10 cm'},
+    citronsverts:{label:'Citrons verts', note:'4'},
+    citrons:{label:'Citrons', note:'4'},
+    citron:{label:'Citron', note:'2'},
+    yaourt:{label:'Yaourt nature ou grec', note:'2 pots'},
+    coriandre:{label:'Coriandre fraîche', note:'facultatif'},
+    persil:{label:'Persil frais', note:'facultatif'},
+    menthe:{label:'Menthe fraîche', note:'facultatif'},
+    boeufhache:{label:'Bœuf haché', note:'1,2 kg'},
+    dindehachee:{label:'Dinde hachée', note:'1,2 kg'},
+    porc:{label:'Porc émincé ou haché', note:'1,2 kg'},
+    agneauhache:{label:'Agneau haché', note:'1,2 kg'},
+    crevettes:{label:'Crevettes décortiquées', note:'1 kg, fraîches ou surgelées'},
+    saumon:{label:'Filets de saumon', note:'1,2 kg (10 filets)'},
+    aubergine:{label:'Aubergine', note:'2'},
+    avocat:{label:'Avocats', note:'4 — à acheter proche de la conso'},
+    choufleur:{label:'Chou-fleur', note:'2'},
+    epinards:{label:'Épinards frais', note:'400 g, ou surgelés'},
+    champignons:{label:'Champignons de Paris', note:'500 g'},
+    chourouge:{label:'Chou rouge', note:'une demie'},
+    celeri:{label:'Céleri branche', note:'4 branches'},
+    basilicthai:{label:'Basilic thaï ou basilic frais', note:'facultatif'}
+  };
+
+  var STOCK = {
+    riz:{label:'Riz jasmin ou basmati', note:'500 g par semaine sélectionnée', cat:'Céréales & légumineuses'},
+    semoule:{label:'Semoule (couscous)', note:'500 g', cat:'Céréales & légumineuses'},
+    lentilles:{label:'Lentilles vertes', note:'400 g', cat:'Céréales & légumineuses'},
+    poischiches:{label:'Pois chiches', note:'4 boîtes (ou 800 g secs)', cat:'Céréales & légumineuses'},
+    haricotsnoirs:{label:'Haricots noirs', note:'4 boîtes', cat:'Céréales & légumineuses'},
+    haricotsrouges:{label:'Haricots rouges', note:'4 boîtes', cat:'Céréales & légumineuses'},
+    mais:{label:'Maïs', note:'2 boîtes ou surgelé', cat:'Céréales & légumineuses'},
+    tomatesconcassees:{label:'Tomates concassées', note:'2 boîtes', cat:'Céréales & légumineuses'},
+    laitcoco:{label:'Lait de coco', note:'2 boîtes', cat:'Céréales & légumineuses'},
+    wraps:{label:'Wraps ou tortillas', note:'2 paquets', cat:'Pain & wraps'},
+    soja:{label:'Sauce soja', cat:'Sauces & condiments'},
+    sriracha:{label:'Sriracha ou gochujang', cat:'Sauces & condiments'},
+    miel:{label:'Miel', cat:'Sauces & condiments'},
+    huilesesame:{label:'Huile de sésame', note:'ou graines de sésame', cat:'Sauces & condiments'},
+    harissa:{label:'Harissa', cat:'Sauces & condiments'},
+    tahini:{label:'Tahini', cat:'Sauces & condiments'},
+    huileolive:{label:"Huile d’olive", cat:'Sauces & condiments'},
+    saucepiquante:{label:'Sauce piquante', note:'chipotle ou tabasco, facultatif', cat:'Sauces & condiments'},
+    vinaigre:{label:'Vinaigre (riz ou blanc)', cat:'Sauces & condiments'},
+    saucepoisson:{label:'Sauce poisson (nuoc mâm)', note:'facultatif, sinon sauce soja', cat:'Sauces & condiments'},
+    curry:{label:'Curry en poudre', note:'ou pâte de curry rouge thaï', cat:'Épices'},
+    paprikafume:{label:'Paprika fumé', cat:'Épices'},
+    cumin:{label:'Cumin en poudre', cat:'Épices'},
+    chilipoudre:{label:'Chili en poudre', cat:'Épices'},
+    curcuma:{label:'Curcuma', cat:'Épices'},
+    garammasala:{label:'Garam masala', cat:'Épices'},
+    coriandremoulue:{label:'Coriandre moulue', cat:'Épices'},
+    rashanout:{label:'Ras-el-hanout', cat:'Épices'},
+    origan:{label:'Origan séché', cat:'Épices'},
+    epicescajun:{label:'Épices cajun', note:'ou paprika + thym + origan + cayenne', cat:'Épices'},
+    cacahuetes:{label:'Cacahuètes non salées', cat:'Fruits secs, olives & surgelés'},
+    abricotssecs:{label:'Abricots secs', cat:'Fruits secs, olives & surgelés'},
+    olives:{label:'Olives dénoyautées', cat:'Fruits secs, olives & surgelés'},
+    edamame:{label:'Edamame surgelé', cat:'Fruits secs, olives & surgelés'},
+    huile:{label:'Huile', cat:'Base'},
+    sel:{label:'Sel', cat:'Base'},
+    poivre:{label:'Poivre', cat:'Base'}
+  };
+
+  var STOCK_CATS = ['Céréales & légumineuses','Pain & wraps','Sauces & condiments','Épices','Fruits secs, olives & surgelés','Base'];
+
+  // ---------- the 10 batches ----------
+  var BATCHES = [
+  {
+    id:'b1', theme:'Asiatique épicé', tags:['Poulet','Soja-gingembre','Riz'],
+    stock:['riz','lentilles','laitcoco','wraps','soja','sriracha','miel','huilesesame','curry','paprikafume','huile','sel','poivre'],
+    frais:['poulet','brocoli','courgettes','poivrons','patatedouce','carottes','concombre','oignon','ail','gingembre','citronsverts','yaourt','coriandre'],
+    prep:[
+      {id:'p1', tag:'Prép · 5 min', text:'Préchauffer le four à 200 °C. Préparer la marinade du poulet — sauce soja, ail écrasé, gingembre râpé, sriracha, miel — puis laisser mariner pendant la suite.'},
+      {id:'p2', tag:'Prép · 10 min', text:'Éplucher et couper les patates douces en cubes. Couper le brocoli, les courgettes et les poivrons.'},
+      {id:'p3', tag:'Four · 35-40 min', text:'Enfourner les patates douces et les légumes, avec huile, sel et paprika fumé.', timer:2100, display:'35:00'},
+      {id:'p4', tag:'Plaque · 18 min', text:'Cuire le riz.', timer:1080, display:'18:00'},
+      {id:'p5', tag:'Plaque · 20-25 min', text:'Cuire les lentilles avec le lait de coco et le curry, façon dal.', timer:1200, display:'20:00'},
+      {id:'p6', tag:'Airfryer · 180 °C · 20 min', text:'Cuire le poulet mariné, en 2 fournées si besoin.', timer:1200, display:'20:00'},
+      {id:'p7', tag:'Prép · 10 min', text:'Râper les carottes, couper le concombre. À garder cru, au frigo.'},
+      {id:'p8', tag:'Sauce · 5 min', text:'Sauce yaourt : yaourt, citron vert, ail, sriracha.'},
+      {id:'p9', tag:'Sauce · 5 min', text:'Sauce soja-sésame : soja, huile de sésame, miel, gingembre râpé.'},
+      {id:'p10', tag:'Rangement · 10 min', text:'Répartir dans les boîtes selon les 5 repas, étiqueter frigo et congélateur.'}
+    ],
+    meals:[
+      {name:'Bowl asiatique', tags:['Riz','Poulet','Brocoli'], text:'Riz, poulet, brocoli rôti, sauce soja-sésame par-dessus.', sauce:'soja-sésame-miel-gingembre'},
+      {name:'Dal de lentilles coco-curry', tags:['Lentilles','Patate douce','Carottes râpées'], text:'Lentilles au lait de coco et curry, patate douce rôtie, carottes râpées ajoutées au moment de servir, un peu de coriandre.'},
+      {name:'Wrap épicé', tags:['Poulet','Poivrons','Concombre'], text:'Poulet, poivrons rôtis, concombre, dans un wrap.', sauce:'yaourt-citron vert-sriracha'},
+      {name:'Riz sauté minute', tags:['Riz','Légumes restants','Poulet'], text:'Riz et légumes restants sautés à la poêle avec le poulet émietté, un trait de sauce soja.'},
+      {name:'Salade tiède', tags:['Lentilles','Poulet','Courgettes'], text:'Lentilles, poulet, courgettes rôties, servis tièdes.', sauce:'yaourt-citron vert'}
+    ],
+    conservation:{ frigo:['Bowl asiatique','Wrap épicé','Riz sauté minute'], congelo:['Dal de lentilles coco-curry','Salade tiède (poulet + lentilles se congèlent bien)'], note:'Sauces, carottes râpées et concombre restent au frigo à part, ajoutés seulement au moment de manger.' }
+  },
+  {
+    id:'b2', theme:'Méditerranéen, harissa', tags:['Dinde','Harissa','Semoule'],
+    stock:['semoule','poischiches','harissa','tahini','miel','huileolive','cumin','paprikafume','huile','sel','poivre'],
+    frais:['dindehachee','aubergine','courgettes','poivrons','oignonrouge','ail','citrons','yaourt','persil'],
+    prep:[
+      {id:'p1', tag:'Prép · 5 min', text:"Préchauffer le four à 200 °C. Mélanger la dinde hachée avec harissa, cumin, ail écrasé, et façonner en petites boulettes (keftas)."},
+      {id:'p2', tag:'Prép · 10 min', text:"Couper l’aubergine, les courgettes et les poivrons."},
+      {id:'p3', tag:'Four · 30-35 min', text:'Enfourner les légumes et les pois chiches égouttés, avec huile, cumin et paprika.', timer:1800, display:'30:00'},
+      {id:'p4', tag:'Plaque · 10 min', text:'Préparer la semoule : verser de l’eau bouillante dessus, couvrir et laisser gonfler.', timer:600, display:'10:00'},
+      {id:'p5', tag:'Airfryer · 180 °C · 15 min', text:'Cuire les keftas de dinde.', timer:900, display:'15:00'},
+      {id:'p6', tag:'Sauce · 5 min', text:'Sauce yaourt-tahini : yaourt, tahini, citron, ail.'},
+      {id:'p7', tag:'Sauce · 5 min', text:'Sauce harissa-miel, pour relever (facultative).'},
+      {id:'p8', tag:'Rangement · 10 min', text:'Répartir dans les boîtes selon les 5 repas.'}
+    ],
+    meals:[
+      {name:'Bowl méditerranéen', tags:['Semoule','Keftas de dinde','Pois chiches'], text:'Semoule, keftas de dinde, légumes rôtis, pois chiches, sauce yaourt-tahini.', sauce:'yaourt-tahini-citron-ail'},
+      {name:'Buddha bowl pois chiches', tags:['Pois chiches','Semoule','Légumes rôtis'], text:'Pois chiches rôtis, semoule, légumes, sauce tahini-citron. Marche très bien sans viande aussi.'},
+      {name:'Wrap harissa', tags:['Keftas de dinde','Légumes rôtis'], text:'Keftas de dinde, légumes rôtis, sauce yaourt-tahini, dans un wrap.', sauce:'yaourt-tahini'},
+      {name:'Semoule sautée', tags:['Semoule','Légumes restants','Dinde'], text:'Semoule et légumes restants, keftas de dinde émiettées, un filet de sauce harissa-miel.'},
+      {name:'Salade tiède', tags:['Pois chiches','Légumes rôtis','Dinde'], text:'Pois chiches, légumes rôtis, keftas de dinde, servis tièdes.', sauce:'citron-tahini'}
+    ],
+    conservation:{ frigo:['Bowl méditerranéen','Wrap harissa','Semoule sautée'], congelo:['Buddha bowl pois chiches','Salade tiède'], note:'Sauces toujours à part, ajoutées au moment de manger.' }
+  },
+  {
+    id:'b3', theme:'Mexicain épicé', tags:['Bœuf','Haricots noirs','Avocat'],
+    stock:['riz','haricotsnoirs','mais','cumin','paprikafume','chilipoudre','huile','sel','poivre'],
+    frais:['boeufhache','poivrons','oignonrouge','ail','citronsverts','avocat','coriandre','yaourt'],
+    prep:[
+      {id:'p1', tag:'Prép · 5 min', text:'Assaisonner le bœuf haché — cumin, paprika fumé, chili en poudre, ail, un peu de citron vert.'},
+      {id:'p2', tag:'Prép · 10 min', text:"Couper les poivrons et l’oignon rouge."},
+      {id:'p3', tag:'Four · 25-30 min', text:'Enfourner les poivrons et l’oignon avec les épices.', timer:1500, display:'25:00'},
+      {id:'p4', tag:'Plaque · 18 min', text:'Cuire le riz.', timer:1080, display:'18:00'},
+      {id:'p5', tag:'Plaque · 10 min', text:'Réchauffer les haricots noirs et le maïs avec cumin et paprika.', timer:600, display:'10:00'},
+      {id:'p6', tag:'Plaque · 10 min', text:'Faire revenir le bœuf haché à la poêle avec les épices, émietté.', timer:600, display:'10:00'},
+      {id:'p7', tag:'Sauce · 5 min', text:'Crema : yaourt, citron vert, coriandre.'},
+      {id:'p8', tag:'Rangement · 10 min', text:"Répartir dans les boîtes. Garder l’avocat à part, à ajouter au moment de manger."}
+    ],
+    meals:[
+      {name:'Bowl mexicain', tags:['Riz','Bœuf','Haricots noirs'], text:'Riz, bœuf épicé, haricots noirs, maïs, poivrons rôtis, crema.', sauce:'crema yaourt-citron vert-coriandre'},
+      {name:'Chili bœuf-haricots', tags:['Bœuf','Haricots noirs','Poivrons'], text:'Bœuf émietté, haricots noirs, poivrons, épices, avec riz — se congèle très bien.'},
+      {name:'Wrap mexicain', tags:['Bœuf','Haricots noirs','Poivrons'], text:'Bœuf, haricots, poivrons rôtis, crema, dans une tortilla.', sauce:'crema'},
+      {name:'Riz sauté mexicain', tags:['Riz','Légumes restants','Bœuf'], text:'Riz et légumes restants sautés, bœuf émietté, épices.'},
+      {name:'Salade tiède mexicaine', tags:['Haricots noirs','Maïs','Bœuf'], text:'Haricots noirs, maïs, bœuf, poivrons, avocat ajouté au moment de manger.', sauce:'crema'}
+    ],
+    conservation:{ frigo:['Bowl mexicain','Wrap mexicain','Riz sauté mexicain'], congelo:['Chili bœuf-haricots','Salade tiède mexicaine (sans avocat)'], note:'Avocat et crema toujours ajoutés à la dernière minute, jamais congelés avec le reste.' }
+  },
+  {
+    id:'b4', theme:'Indien, tikka & chana masala', tags:['Poulet','Curry','Riz basmati'],
+    stock:['riz','poischiches','tomatesconcassees','curcuma','garammasala','cumin','coriandremoulue','huile','sel','poivre'],
+    frais:['poulet','choufleur','epinards','concombre','citron','ail','gingembre','yaourt','menthe'],
+    prep:[
+      {id:'p1', tag:'Prép · 5 min', text:'Mariner le poulet — yaourt, curcuma, garam masala, ail, gingembre, citron.'},
+      {id:'p2', tag:'Prép · 10 min', text:'Couper le chou-fleur en fleurettes.'},
+      {id:'p3', tag:'Four · 25-30 min', text:'Enfourner le chou-fleur avec curcuma, cumin et huile.', timer:1500, display:'25:00'},
+      {id:'p4', tag:'Plaque · 18 min', text:'Cuire le riz basmati.', timer:1080, display:'18:00'},
+      {id:'p5', tag:'Plaque · 20 min', text:'Chana masala : pois chiches, tomates concassées, garam masala, cumin, coriandre moulue.', timer:1200, display:'20:00'},
+      {id:'p6', tag:'Airfryer · 180 °C · 20 min', text:'Cuire le poulet mariné.', timer:1200, display:'20:00'},
+      {id:'p7', tag:'Prép · 5 min', text:'Faire sauter rapidement les épinards à la poêle.'},
+      {id:'p8', tag:'Sauce · 5 min', text:'Raita : yaourt, concombre râpé, menthe ou coriandre, cumin.'},
+      {id:'p9', tag:'Rangement · 10 min', text:'Répartir dans les boîtes.'}
+    ],
+    meals:[
+      {name:'Bowl indien', tags:['Riz basmati','Poulet tikka','Chou-fleur'], text:'Riz basmati, poulet tikka, chou-fleur rôti, épinards, raita.', sauce:'raita'},
+      {name:'Chana masala', tags:['Pois chiches','Riz','Épinards'], text:'Pois chiches épicés, riz, épinards — se congèle très bien.'},
+      {name:'Wrap tikka', tags:['Poulet tikka','Chou-fleur'], text:'Poulet, chou-fleur, raita, dans un wrap.', sauce:'raita'},
+      {name:'Riz sauté indien', tags:['Riz','Légumes restants','Poulet'], text:'Riz et légumes restants sautés, poulet émietté, épices.'},
+      {name:'Salade tiède indienne', tags:['Chana masala','Chou-fleur','Poulet'], text:'Chana masala, chou-fleur, poulet, servis tièdes.', sauce:'raita'}
+    ],
+    conservation:{ frigo:['Bowl indien','Wrap tikka','Riz sauté indien'], congelo:['Chana masala','Salade tiède indienne'], note:'Raita toujours à part, ajoutée au moment de manger.' }
+  },
+  {
+    id:'b5', theme:'Thaï, curry rouge coco', tags:['Crevettes','Coco','Cacahuètes'],
+    stock:['riz','laitcoco','curry','saucepoisson','cacahuetes','sriracha','huile','sel','poivre'],
+    frais:['crevettes','brocoli','poivrons','carottes','oignon','ail','gingembre','citronsverts','basilicthai'],
+    prep:[
+      {id:'p1', tag:'Prép · 5 min', text:'Préchauffer le four à 200 °C. Décortiquer les crevettes si besoin, réserver au frigo.'},
+      {id:'p2', tag:'Prép · 10 min', text:'Couper le brocoli, les poivrons et les carottes.'},
+      {id:'p3', tag:'Four · 25 min', text:'Enfourner les légumes avec un peu d’huile.', timer:1500, display:'25:00'},
+      {id:'p4', tag:'Plaque · 18 min', text:'Cuire le riz.', timer:1080, display:'18:00'},
+      {id:'p5', tag:'Plaque · 15 min', text:'Préparer la sauce curry : lait de coco, pâte de curry rouge, ail, gingembre, sauce poisson — laisser mijoter pour réduire un peu.', timer:900, display:'15:00'},
+      {id:'p6', tag:'Plaque · 5 min', text:'Ajouter les crevettes dans la sauce et pocher jusqu’à ce qu’elles rosissent.', timer:300, display:'05:00'},
+      {id:'p7', tag:'Prép · 5 min', text:'Concasser grossièrement les cacahuètes, presser les citrons verts.'},
+      {id:'p8', tag:'Rangement · 10 min', text:'Répartir dans les boîtes ; garder la sauce coco à part pour plus de fraîcheur.'}
+    ],
+    meals:[
+      {name:'Bowl thaï', tags:['Riz','Crevettes','Sauce coco'], text:'Riz, crevettes, légumes rôtis, sauce curry coco par-dessus, cacahuètes concassées, citron vert.', sauce:'curry coco-cacahuètes'},
+      {name:'Soupe-bowl coco', tags:['Sauce coco','Légumes','Crevettes'], text:'Sauce curry coco allongée d’un peu d’eau, légumes, crevettes, riz à part.'},
+      {name:'Wrap thaï', tags:['Crevettes','Légumes'], text:'Crevettes, légumes, un peu de sauce coco, dans un wrap.', sauce:'curry coco'},
+      {name:'Riz sauté thaï', tags:['Riz','Légumes restants','Crevettes'], text:'Riz et légumes restants sautés, crevettes, filet de sauce poisson.'},
+      {name:'Salade tiède thaï', tags:['Légumes rôtis','Crevettes','Cacahuètes'], text:'Légumes rôtis, crevettes, cacahuètes, citron vert, sauce curry coco allégée.'}
+    ],
+    conservation:{ frigo:['Bowl thaï','Wrap thaï','Riz sauté thaï'], congelo:['Soupe-bowl coco','Salade tiède thaï'], note:'Sauce coco et cacahuètes toujours ajoutées à part, au moment de manger.' }
+  },
+  {
+    id:'b6', theme:'Coréen, gochujang', tags:['Porc','Gochujang','Sésame'],
+    stock:['riz','sriracha','soja','huilesesame','miel','vinaigre','huile','sel','poivre'],
+    frais:['porc','epinards','carottes','champignons','chourouge','ail','gingembre','oignon'],
+    prep:[
+      {id:'p1', tag:'Prép · 5 min', text:'Mariner le porc émincé — gochujang (ou sriracha), soja, ail, gingembre, miel.'},
+      {id:'p2', tag:'Prép · 10 min', text:'Couper les carottes en bâtonnets, émincer le chou rouge, couper les champignons.'},
+      {id:'p3', tag:'Four · 20 min', text:'Enfourner les champignons et les carottes avec un peu d’huile.', timer:1200, display:'20:00'},
+      {id:'p4', tag:'Plaque · 18 min', text:'Cuire le riz.', timer:1080, display:'18:00'},
+      {id:'p5', tag:'Plaque · 5 min', text:'Faire sauter rapidement les épinards à la poêle.'},
+      {id:'p6', tag:'Plaque · 10 min', text:'Faire sauter le porc mariné à la poêle, à feu vif.', timer:600, display:'10:00'},
+      {id:'p7', tag:'Prép · 5 min', text:'Mélanger le chou rouge cru avec un peu de vinaigre et de sel (pickle rapide).'},
+      {id:'p8', tag:'Sauce · 5 min', text:'Sauce sésame : huile de sésame, soja, une pointe de gochujang.'},
+      {id:'p9', tag:'Rangement · 10 min', text:'Répartir dans les boîtes.'}
+    ],
+    meals:[
+      {name:'Bibimbap-bowl', tags:['Riz','Porc gochujang','Légumes'], text:'Riz, porc gochujang, épinards, carottes, champignons, chou rouge mariné, sauce sésame.', sauce:'sésame-gochujang'},
+      {name:'Bowl légumes sautés', tags:['Champignons','Carottes','Épinards'], text:'Champignons, carottes, épinards, riz, porc émietté, sauce sésame.'},
+      {name:'Wrap coréen', tags:['Porc','Chou rouge mariné'], text:'Porc, chou rouge mariné, carottes, sauce sésame, dans un wrap.', sauce:'sésame'},
+      {name:'Riz sauté coréen', tags:['Riz','Légumes restants','Porc'], text:'Riz et légumes restants sautés, porc émietté, filet de sauce sésame-gochujang.'},
+      {name:'Salade tiède coréenne', tags:['Épinards','Champignons','Porc'], text:'Épinards, champignons, porc, chou rouge mariné, sauce sésame.'}
+    ],
+    conservation:{ frigo:['Bibimbap-bowl','Wrap coréen','Riz sauté coréen'], congelo:['Bowl légumes sautés','Salade tiède coréenne'], note:'Chou rouge mariné et sauce sésame toujours à part.' }
+  },
+  {
+    id:'b7', theme:'Marocain, tajine ras-el-hanout', tags:['Poulet','Abricots','Semoule'],
+    stock:['semoule','rashanout','harissa','olives','abricotssecs','miel','huileolive','huile','sel','poivre'],
+    frais:['poulet','carottes','courgettes','oignon','ail','citron','coriandre'],
+    prep:[
+      {id:'p1', tag:'Prép · 5 min', text:"Mariner le poulet — ras-el-hanout, ail, citron, huile d’olive."},
+      {id:'p2', tag:'Prép · 10 min', text:"Couper les carottes, les courgettes et l’oignon."},
+      {id:'p3', tag:'Four · 30 min', text:'Enfourner les légumes avec les abricots secs et un peu de ras-el-hanout.', timer:1800, display:'30:00'},
+      {id:'p4', tag:'Plaque · 10 min', text:'Préparer la semoule : eau bouillante, couvrir, laisser gonfler.', timer:600, display:'10:00'},
+      {id:'p5', tag:'Airfryer · 180 °C · 18 min', text:'Cuire le poulet mariné.', timer:1080, display:'18:00'},
+      {id:'p6', tag:'Prép · 5 min', text:'Répartir les olives, hacher la coriandre.'},
+      {id:'p7', tag:'Sauce · 5 min', text:'Sauce yaourt-harissa, si envie de relever (facultative).'},
+      {id:'p8', tag:'Rangement · 10 min', text:'Répartir dans les boîtes.'}
+    ],
+    meals:[
+      {name:'Bowl marocain', tags:['Semoule','Poulet','Abricots'], text:'Semoule, poulet ras-el-hanout, légumes rôtis, abricots, olives.'},
+      {name:'Tajine minute', tags:['Poulet','Légumes','Abricots'], text:'Poulet, légumes, abricots, olives, mijotés ensemble avec un peu de bouillon ou d’eau.'},
+      {name:'Wrap marocain', tags:['Poulet','Légumes rôtis','Olives'], text:'Poulet, légumes rôtis, olives, dans un wrap.'},
+      {name:'Semoule sautée marocaine', tags:['Semoule','Légumes restants','Poulet'], text:'Semoule et légumes restants, poulet émietté, ras-el-hanout.'},
+      {name:'Salade tiède marocaine', tags:['Légumes rôtis','Poulet','Olives'], text:'Légumes rôtis, poulet, olives, abricots, un filet de citron.'}
+    ],
+    conservation:{ frigo:['Bowl marocain','Wrap marocain','Semoule sautée marocaine'], congelo:['Tajine minute','Salade tiède marocaine'], note:'Olives ajoutées au moment de manger, pour garder leur texture.' }
+  },
+  {
+    id:'b8', theme:'Grec, citron-origan', tags:['Agneau','Tzatziki','Olives'],
+    stock:['riz','origan','olives','huileolive','paprikafume','huile','sel','poivre'],
+    frais:['agneauhache','concombre','poivrons','oignonrouge','ail','citron','yaourt','menthe'],
+    prep:[
+      {id:'p1', tag:'Prép · 5 min', text:"Mélanger l’agneau haché avec citron, origan, ail, huile d’olive, paprika, et façonner en petites boulettes."},
+      {id:'p2', tag:'Prép · 10 min', text:"Couper les poivrons et l’oignon rouge."},
+      {id:'p3', tag:'Four · 25 min', text:'Enfourner les poivrons et l’oignon.', timer:1500, display:'25:00'},
+      {id:'p4', tag:'Plaque · 18 min', text:'Cuire le riz.', timer:1080, display:'18:00'},
+      {id:'p5', tag:'Airfryer · 180 °C · 15 min', text:'Cuire les boulettes d’agneau.', timer:900, display:'15:00'},
+      {id:'p6', tag:'Prép · 10 min', text:'Râper le concombre, l’égoutter un peu.'},
+      {id:'p7', tag:'Sauce · 5 min', text:'Tzatziki : yaourt, concombre râpé, ail, menthe.'},
+      {id:'p8', tag:'Rangement · 10 min', text:'Répartir dans les boîtes.'}
+    ],
+    meals:[
+      {name:'Bowl grec', tags:['Riz','Boulettes d’agneau','Olives'], text:'Riz, boulettes d’agneau citron-origan, poivrons rôtis, olives, tzatziki.', sauce:'tzatziki'},
+      {name:'Assiette grecque', tags:['Agneau','Poivrons','Olives'], text:'Boulettes d’agneau, poivrons, oignon rôti, olives, un peu de riz, tzatziki à part.'},
+      {name:'Wrap grec', tags:['Agneau','Poivrons rôtis'], text:'Agneau, poivrons rôtis, tzatziki, dans un wrap.', sauce:'tzatziki'},
+      {name:'Riz sauté grec', tags:['Riz','Légumes restants','Agneau'], text:'Riz et légumes restants sautés, agneau émietté, origan.'},
+      {name:'Salade tiède grecque', tags:['Poivrons rôtis','Agneau','Olives'], text:'Poivrons rôtis, agneau, olives, tzatziki.'}
+    ],
+    conservation:{ frigo:['Bowl grec','Wrap grec','Riz sauté grec'], congelo:['Assiette grecque','Salade tiède grecque'], note:'Tzatziki et olives toujours à part.' }
+  },
+  {
+    id:'b9', theme:'Cajun, façon jambalaya', tags:['Porc','Haricots rouges','Épicé'],
+    stock:['riz','haricotsrouges','tomatesconcassees','epicescajun','saucepiquante','huile','sel','poivre'],
+    frais:['porc','poivrons','celeri','oignon','ail'],
+    prep:[
+      {id:'p1', tag:'Prép · 5 min', text:'Assaisonner le porc haché — épices cajun, ail, un peu d’huile.'},
+      {id:'p2', tag:'Prép · 10 min', text:"Couper les poivrons, le céleri et l’oignon (la « sainte trinité »)."},
+      {id:'p3', tag:'Four · 20 min', text:'Enfourner les poivrons, le céleri et l’oignon avec les épices cajun.', timer:1200, display:'20:00'},
+      {id:'p4', tag:'Plaque · 18 min', text:'Cuire le riz.', timer:1080, display:'18:00'},
+      {id:'p5', tag:'Plaque · 15 min', text:'Mijoter les haricots rouges avec les tomates concassées et les épices cajun.', timer:900, display:'15:00'},
+      {id:'p6', tag:'Plaque · 10 min', text:'Faire revenir le porc haché à la poêle avec les épices cajun.', timer:600, display:'10:00'},
+      {id:'p7', tag:'Rangement · 10 min', text:'Répartir dans les boîtes, un trait de sauce piquante si besoin.'}
+    ],
+    meals:[
+      {name:'Jambalaya bowl', tags:['Riz','Porc cajun','Haricots rouges'], text:'Riz, porc cajun, haricots rouges, légumes rôtis.'},
+      {name:'Haricots rouges mijotés', tags:['Haricots rouges','Tomates','Légumes'], text:'Haricots rouges, tomates, légumes, riz à part, un peu de porc émietté.'},
+      {name:'Wrap cajun', tags:['Porc','Légumes rôtis'], text:'Porc, légumes rôtis, un trait de sauce piquante, dans un wrap.'},
+      {name:'Riz sauté cajun', tags:['Riz','Légumes restants','Porc'], text:'Riz et légumes restants sautés, porc émietté, épices cajun.'},
+      {name:'Salade tiède cajun', tags:['Haricots rouges','Légumes rôtis','Porc'], text:'Haricots rouges, légumes rôtis, porc, sauce piquante.'}
+    ],
+    conservation:{ frigo:['Jambalaya bowl','Wrap cajun','Riz sauté cajun'], congelo:['Haricots rouges mijotés','Salade tiède cajun'], note:'Tout se congèle bien : c’est un batch particulièrement adapté au congélateur.' }
+  },
+  {
+    id:'b10', theme:'Japonais, teriyaki épicé', tags:['Saumon','Teriyaki','Edamame'],
+    stock:['riz','soja','miel','huilesesame','sriracha','edamame','vinaigre','huile','sel','poivre'],
+    frais:['saumon','chourouge','carottes','ail','gingembre'],
+    prep:[
+      {id:'p1', tag:'Prép · 5 min', text:'Préparer la sauce teriyaki — soja, miel, ail, gingembre, un trait de sriracha — en garder une partie pour badigeonner le saumon.'},
+      {id:'p2', tag:'Prép · 10 min', text:'Émincer le chou rouge et les carottes en fins bâtonnets.'},
+      {id:'p3', tag:'Prép · 5 min', text:'Mélanger le chou rouge et les carottes avec un peu de vinaigre et de sel (pickle rapide).'},
+      {id:'p4', tag:'Plaque · 18 min', text:'Cuire le riz.', timer:1080, display:'18:00'},
+      {id:'p5', tag:'Plaque · 5 min', text:'Cuire les edamame surgelés à l’eau bouillante quelques minutes.'},
+      {id:'p6', tag:'Airfryer · 180 °C · 10 min', text:'Cuire les filets de saumon, badigeonnés de sauce teriyaki en fin de cuisson.', timer:600, display:'10:00'},
+      {id:'p7', tag:'Rangement · 10 min', text:'Répartir dans les boîtes.'}
+    ],
+    meals:[
+      {name:'Bowl teriyaki', tags:['Riz','Saumon teriyaki','Edamame'], text:'Riz, saumon teriyaki, edamame, pickle de chou rouge-carottes, graines de sésame.', sauce:'teriyaki maison'},
+      {name:'Saumon teriyaki seul', tags:['Saumon','Riz','Edamame'], text:'Saumon, riz, edamame, sauce teriyaki à part.'},
+      {name:'Wrap teriyaki', tags:['Saumon','Pickle de chou rouge'], text:'Saumon émietté, pickle de chou rouge, dans un wrap.', sauce:'teriyaki'},
+      {name:'Riz sauté teriyaki', tags:['Riz','Edamame','Saumon'], text:'Riz, edamame, saumon émietté, sauce teriyaki.'},
+      {name:'Salade tiède teriyaki', tags:['Pickle chou rouge','Saumon','Edamame'], text:'Pickle de chou rouge-carottes, saumon, edamame, sauce teriyaki.'}
+    ],
+    conservation:{ frigo:['Bowl teriyaki','Wrap teriyaki','Riz sauté teriyaki'], congelo:['Saumon teriyaki seul','Salade tiède teriyaki'], note:'Pickle de chou rouge toujours à part, pour garder le croquant.' }
+  }
+  ];
+
+  var BY_ID = {};
+  BATCHES.forEach(function(b){ BY_ID[b.id] = b; });
+  var ALL_IDS = BATCHES.map(function(b){ return b.id; });
+
+  function esc(s){ return String(s); }
+
+  function shuffle(arr){
+    var a = arr.slice();
+    for(var i=a.length-1;i>0;i--){
+      var j = Math.floor(Math.random()*(i+1));
+      var t=a[i]; a[i]=a[j]; a[j]=t;
+    }
+    return a;
+  }
+  function pickN(n, exclude){
+    exclude = exclude || [];
+    var pool = ALL_IDS.filter(function(id){ return exclude.indexOf(id) === -1; });
+    return shuffle(pool).slice(0, n);
+  }
+
+  // ---------- state ----------
+  var STORAGE_KEY = 'mois-epice-v2';
+  var state = { tab:'stock', selection:null, checks:{} };
+  try{
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      var parsed = JSON.parse(raw);
+      if(parsed && typeof parsed === 'object'){
+        state.tab = parsed.tab || 'stock';
+        state.checks = parsed.checks || {};
+        if(Array.isArray(parsed.selection) && parsed.selection.length === 4 && parsed.selection.every(function(id){ return !!BY_ID[id]; })){
+          state.selection = parsed.selection;
+        }
+      }
+    }
+  }catch(e){}
+  if(!state.selection){ state.selection = pickN(4); }
+
+  function saveState(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){} }
+
+  function itemRow(prefix, id, dict){
+    var it = dict[id];
+    if(!it) return '';
+    return '<label class="item"><input type="checkbox" data-id="'+prefix+'-'+id+'">' +
+      '<span class="box">'+CHECK_SVG+'</span>' +
+      '<span class="text">'+esc(it.label)+(it.note?' <span class="note">'+esc(it.note)+'</span>':'')+'</span></label>';
+  }
+
+  var STOCK_NOTE = "Ce qui suit couvre les 4 semaines sélectionnées, en quantités doublées pour manger midi ET soir — c’est la grosse commande du mois. Congèle direct la viande, le poisson ou les crevettes de chaque semaine si tu ne les fais pas à la suite ; le reste (légumes frais, yaourt) s’achète plutôt semaine par semaine, listé dans chaque onglet S1 à S4.";
+  var REHEAT_NOTE = "Réchauffe : 2-3 min au micro-ondes, couvert pour ne pas dessécher. Pour le congélateur, décongèle au frigo la veille.";
+
+  function renderStockPanel(){
+    var selectedBatches = state.selection.map(function(id){ return BY_ID[id]; });
+    var stockIds = [];
+    selectedBatches.forEach(function(b){
+      b.stock.forEach(function(id){ if(stockIds.indexOf(id) === -1) stockIds.push(id); });
+    });
+
+    var html = '<div class="lineup"><h3>Ce mois-ci</h3><span class="sub">4 batchs tirés au sort parmi les 10 de la bibliothèque</span>';
+    html += '<div class="lineup-pills">';
+    selectedBatches.forEach(function(b,i){ html += '<span class="lineup-pill">S'+(i+1)+' · '+esc(b.theme)+'</span>'; });
+    html += '</div><button type="button" class="reroll-btn" id="reroll-all">Nouveau tirage</button></div>';
+
+    html += '<div class="progress"><div class="progress-track"><div class="progress-fill fill-chili" id="fill-stock"></div></div><span class="progress-label" id="label-stock">0 / 0</span></div>';
+    html += '<div class="callout"><b>La grosse commande.</b> '+STOCK_NOTE+'</div>';
+    html += '<div class="callout turm">'+REHEAT_NOTE+'</div>';
+
+    STOCK_CATS.forEach(function(cat){
+      var ids = stockIds.filter(function(id){ return STOCK[id] && STOCK[id].cat === cat; });
+      if(!ids.length) return;
+      html += '<div class="section-title stock-cat">'+esc(cat)+'</div><div class="list">';
+      ids.forEach(function(id){ html += itemRow('stock', id, STOCK); });
+      html += '</div>';
+    });
+    return '<section class="panel" id="panel-stock" data-panel="stock"><div class="week-header"><h2>Stock du mois</h2><span class="theme">Commande unique, 1-2x par mois</span></div>'+html+'</section>';
+  }
+
+  function renderWeekPanel(slotIndex){
+    var batchId = state.selection[slotIndex];
+    var w = BY_ID[batchId];
+    var id = 's'+(slotIndex+1);
+
+    var html = '<div class="week-header"><div><h2>Semaine '+(slotIndex+1)+'</h2><span class="theme">'+esc(w.theme)+'</span></div>' +
+      '<button type="button" class="swap-btn" data-swap-slot="'+slotIndex+'">Changer</button></div>';
+    html += '<div class="quicknav"><a href="#'+id+'-frais">Courses</a><a href="#'+id+'-prep">Préparation</a><a href="#'+id+'-repas">Repas</a><a href="#'+id+'-conservation">Conservation</a></div>';
+
+    html += '<div class="week-section" id="'+id+'-frais">';
+    html += '<div class="progress"><div class="progress-track"><div class="progress-fill fill-chili" id="fill-'+id+'-frais"></div></div><span class="progress-label" id="label-'+id+'-frais">0 / 0</span></div>';
+    html += '<div class="section-title">Frais à acheter cette semaine</div><div class="list">';
+    w.frais.forEach(function(fid){ html += itemRow(batchId+'-frais', fid, FRESH); });
+    html += '</div></div>';
+
+    html += '<div class="week-section" id="'+id+'-prep">';
+    html += '<div class="progress"><div class="progress-track"><div class="progress-fill fill-turmeric" id="fill-'+id+'-prep"></div></div><span class="progress-label" id="label-'+id+'-prep">0 / 0</span></div>';
+    html += '<div class="section-title">Préparation</div><div class="callout turm">Quantités doublées pour couvrir midi ET soir. Si le four ou l’airfryer est trop petit pour tout accueillir d’un coup, cuis en 2 fournées.</div><div class="list prep-check">';
+    w.prep.forEach(function(step, i){
+      html += '<div class="step" data-step-id="'+batchId+'-'+step.id+'"><div class="step-head"><span class="step-num">'+(i+1)+'</span><div class="step-body">';
+      html += '<span class="step-tag">'+esc(step.tag)+'</span><p class="step-text">'+esc(step.text)+'</p>';
+      if(step.timer){
+        html += '<div class="timer" data-duration="'+step.timer+'"><span class="timer-display">'+step.display+'</span>' +
+          '<button type="button" class="timer-btn" data-action="toggle">Démarrer</button>' +
+          '<button type="button" class="timer-btn ghost" data-action="reset">Reset</button></div>';
+      }
+      html += '</div><label class="step-check item" style="padding:0;border:none;"><input type="checkbox" data-id="'+batchId+'-'+step.id+'"><span class="box">'+CHECK_SVG+'</span></label>';
+      html += '</div></div>';
+    });
+    html += '</div></div>';
+
+    html += '<div class="week-section" id="'+id+'-repas"><div class="section-title">Repas</div><div class="callout" style="border-left-color:var(--jade);margin-bottom:12px;"><b style="color:var(--jade);">2 portions par plat.</b> Chaque plat ci-dessous couvre un midi et un soir — de quoi emmener au travail.</div><div class="cards">';
+    w.meals.forEach(function(m){
+      html += '<div class="card"><h3>'+esc(m.name)+'</h3><div class="tags">';
+      m.tags.forEach(function(t){ html += '<span class="tag">'+esc(t)+'</span>'; });
+      html += '</div><p>'+esc(m.text)+'</p>';
+      if(m.sauce) html += '<span class="sauce"><b>Sauce</b> · '+esc(m.sauce)+'</span>';
+      html += '</div>';
+    });
+    html += '</div></div>';
+
+    html += '<div class="week-section" id="'+id+'-conservation"><div class="section-title">Conservation</div>';
+    html += '<div class="cons-grid"><div class="cons-col frigo"><h3>Frigo</h3><span class="span">3-4 jours max</span><ul>';
+    w.conservation.frigo.forEach(function(x){ html += '<li>'+esc(x)+'</li>'; });
+    html += '</ul></div><div class="cons-col congelo"><h3>Congélateur</h3><span class="span">jusqu’à 2-3 mois</span><ul>';
+    w.conservation.congelo.forEach(function(x){ html += '<li>'+esc(x)+'</li>'; });
+    html += '</ul></div></div>';
+    html += '<div class="callout turm">'+esc(w.conservation.note)+'</div>';
+    html += '</div>';
+
+    return '<section class="panel" id="panel-'+id+'" data-panel="'+id+'" hidden>'+html+'</section>';
+  }
+
+  function renderLibPanel(){
+    var html = '<div class="week-header"><h2>Bibliothèque</h2><span class="theme">Les 10 batchs disponibles</span></div>';
+    html += '<div class="lib-list">';
+    BATCHES.forEach(function(b){
+      var active = state.selection.indexOf(b.id) !== -1;
+      html += '<div class="lib-item'+(active?' active':'')+'"><div class="lib-main"><div class="lib-name">'+esc(b.theme)+'</div><div class="tags">';
+      b.tags.forEach(function(t){ html += '<span class="tag">'+esc(t)+'</span>'; });
+      html += '</div></div>';
+      if(active) html += '<span class="lib-badge">Au menu</span>';
+      html += '</div>';
+    });
+    html += '</div>';
+    return '<section class="panel" id="panel-lib" data-panel="lib" hidden>'+html+'</section>';
+  }
+
+  // ---------- render + bind ----------
+  var app = document.getElementById('app');
+
+  function renderApp(){
+    var parts = [renderStockPanel()];
+    for(var i=0;i<4;i++) parts.push(renderWeekPanel(i));
+    parts.push(renderLibPanel());
+    app.innerHTML = parts.join('');
+    bindAll();
+    applyTab(state.tab);
+  }
+
+  function updateProgress(fillId, labelId, checked, total){
+    var fill = document.getElementById(fillId);
+    var label = document.getElementById(labelId);
+    var pct = total ? Math.round((checked/total)*100) : 0;
+    if(fill) fill.style.width = pct + '%';
+    if(label) label.textContent = checked + ' / ' + total;
+  }
+  function refreshGroup(selector, fillId, labelId){
+    var boxes = document.querySelectorAll(selector);
+    var checked = 0;
+    boxes.forEach(function(b){ if(b.checked) checked++; });
+    updateProgress(fillId, labelId, checked, boxes.length);
+  }
+  function refreshAllProgress(){
+    refreshGroup('#panel-stock input[type="checkbox"]', 'fill-stock', 'label-stock');
+    for(var i=1;i<=4;i++){
+      refreshGroup('#s'+i+'-frais input[type="checkbox"]', 'fill-s'+i+'-frais', 'label-s'+i+'-frais');
+      refreshGroup('#s'+i+'-prep .step-check input[type="checkbox"]', 'fill-s'+i+'-prep', 'label-s'+i+'-prep');
+    }
+  }
+
+  function clearAllChecks(){
+    state.checks = {};
+    document.querySelectorAll('input[type="checkbox"][data-id]').forEach(function(i){ i.checked = false; });
+    document.querySelectorAll('.step').forEach(function(s){ s.classList.remove('done'); });
+  }
+
+  function bindCheckboxes(){
+    document.querySelectorAll('input[type="checkbox"][data-id]').forEach(function(input){
+      var id = input.dataset.id;
+      input.checked = !!state.checks[id];
+      var stepEl = input.closest('.step');
+      if(input.checked && stepEl) stepEl.classList.add('done');
+      input.addEventListener('change', function(){
+        state.checks[this.dataset.id] = this.checked;
+        var se = this.closest('.step');
+        if(se) se.classList.toggle('done', this.checked);
+        saveState();
+        refreshAllProgress();
+      });
+    });
+    refreshAllProgress();
+  }
+
+  function bindTabs(){
+    var tabBtns = document.querySelectorAll('.tab-btn');
+    tabBtns.forEach(function(b){ b.addEventListener('click', function(){ applyTab(b.dataset.tab); state.tab = b.dataset.tab; saveState(); }); });
+  }
+  function applyTab(name){
+    document.querySelectorAll('.panel').forEach(function(p){ p.hidden = (p.dataset.panel !== name); });
+    document.querySelectorAll('.tab-btn').forEach(function(b){ b.setAttribute('aria-selected', b.dataset.tab === name ? 'true' : 'false'); });
+  }
+
+  function bindReroll(){
+    var btn = document.getElementById('reroll-all');
+    if(btn){
+      btn.addEventListener('click', function(){
+        state.selection = pickN(4);
+        state.checks = {};
+        saveState();
+        renderApp();
+      });
+    }
+    document.querySelectorAll('[data-swap-slot]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var slot = parseInt(this.dataset.swapSlot, 10);
+        var replacement = pickN(1, state.selection)[0];
+        state.selection[slot] = replacement;
+        state.checks = {};
+        saveState();
+        renderApp();
+      });
+    });
+  }
+
+  function bindResetOpen(){
+    var resetZone = document.getElementById('reset-zone');
+    var btn = document.getElementById('reset-open');
+    if(!btn) return;
+    btn.addEventListener('click', function(){
+      resetZone.innerHTML = '<div class="reset-confirm">Tout décocher ?<button type="button" id="reset-yes" class="danger">Oui</button><button type="button" id="reset-no">Annuler</button></div>';
+      document.getElementById('reset-yes').addEventListener('click', function(){
+        clearAllChecks();
+        saveState();
+        refreshAllProgress();
+        resetZone.innerHTML = '<button type="button" class="reset-btn" id="reset-open">Réinitialiser</button>';
+        bindResetOpen();
+      });
+      document.getElementById('reset-no').addEventListener('click', function(){
+        resetZone.innerHTML = '<button type="button" class="reset-btn" id="reset-open">Réinitialiser</button>';
+        bindResetOpen();
+      });
+    });
+  }
+
+  function beep(){
+    try{
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      var ctx = new Ctx();
+      [0, 0.18].forEach(function(delay){
+        var o = ctx.createOscillator();
+        var g = ctx.createGain();
+        o.frequency.value = 880;
+        o.connect(g); g.connect(ctx.destination);
+        var t0 = ctx.currentTime + delay;
+        g.gain.setValueAtTime(0.0001, t0);
+        g.gain.exponentialRampToValueAtTime(0.18, t0 + 0.01);
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.16);
+        o.start(t0); o.stop(t0 + 0.2);
+      });
+    }catch(e){}
+  }
+  function formatTime(sec){
+    var m = Math.floor(sec/60); var s = sec % 60;
+    return (m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+  }
+  function bindTimers(){
+    document.querySelectorAll('.timer[data-duration]').forEach(function(el){
+      var duration = parseInt(el.dataset.duration, 10) || 0;
+      var remaining = duration;
+      var display = el.querySelector('.timer-display');
+      var toggleBtn = el.querySelector('[data-action="toggle"]');
+      var resetBtn = el.querySelector('[data-action="reset"]');
+      var intervalId = null;
+      function render(){ display.textContent = formatTime(Math.max(remaining,0)); }
+      render();
+      function tick(){
+        remaining -= 1;
+        if(remaining <= 0){
+          remaining = 0; render(); stop();
+          el.classList.add('done'); toggleBtn.textContent = 'Démarrer'; beep();
+          return;
+        }
+        render();
+      }
+      function start(){ intervalId = setInterval(tick, 1000); el.classList.add('running'); el.classList.remove('done'); toggleBtn.textContent = 'Pause'; }
+      function stop(){ if(intervalId){ clearInterval(intervalId); intervalId = null; } el.classList.remove('running'); }
+      toggleBtn.addEventListener('click', function(){
+        if(intervalId){ stop(); toggleBtn.textContent = 'Démarrer'; }
+        else { if(remaining <= 0) remaining = duration; start(); }
+      });
+      resetBtn.addEventListener('click', function(){ stop(); remaining = duration; el.classList.remove('done'); toggleBtn.textContent = 'Démarrer'; render(); });
+    });
+  }
+
+  function bindAll(){
+    bindCheckboxes();
+    bindTabs();
+    bindReroll();
+    bindTimers();
+  }
+
+  renderApp();
+  bindResetOpen();
+})();
+</script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  });
+}
+</script>
+
+</body></html>

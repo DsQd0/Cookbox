@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4C8A6C"/>
+      <stop offset="1" stop-color="#2E5F45"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <!-- steam -->
+  <g stroke="#F4A94A" stroke-width="16" stroke-linecap="round" fill="none" opacity="0.95">
+    <path d="M 196 150 C 176 130, 176 110, 196 90 C 216 70, 216 50, 196 30"/>
+    <path d="M 256 150 C 236 130, 236 110, 256 90 C 276 70, 276 50, 256 30"/>
+    <path d="M 316 150 C 296 130, 296 110, 316 90 C 336 70, 336 50, 316 30"/>
+  </g>
+  <!-- bowl -->
+  <path d="M 120 240 C 120 240, 130 380, 256 380 C 382 380, 392 240, 392 240 Z" fill="#FBF8F1"/>
+  <rect x="106" y="222" width="300" height="34" rx="17" fill="#FBF8F1"/>
+  <!-- bowl shading -->
+  <path d="M 140 254 C 148 350, 200 366 256 366 C 312 366, 364 350, 372 254 Z" fill="#EADFC8"/>
+  <rect x="106" y="222" width="300" height="14" rx="7" fill="#E4D6BC"/>
+</svg>
