@@ -4,7 +4,7 @@ Appli de batch cooking : une bibliothèque de 10 recettes, un tirage aléatoire 
 
 C'est une PWA (Progressive Web App) en HTML/CSS/JS pur, sans build ni dépendances — un simple site statique installable sur téléphone.
 
-Direction artistique reprise de Loverbox : fond `nuit` (#182b2e), cartes `papier` (#f7f0e4), accents `moutarde`/`brique`/`sauge`, titres en Fraunces italique, labels en IBM Plex Mono, texte courant en Inter.
+Direction artistique reprise de Loverbox (façon Letterboxd) : fond quasi noir (#14171b), cartes ardoise (#1b1f27), vert (#30cb75) comme accent principal, orange/ambre pour les catégories courses/prép, texte en Inter sans-serif bold.
 
 ## Installer sur son téléphone
 

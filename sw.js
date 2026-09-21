@@ -1,4 +1,4 @@
-const CACHE = 'cookbox-v2';
+const CACHE = 'cookbox-v3';
 const APP_SHELL = [
   './',
   './index.html',
