@@ -866,7 +866,8 @@
   BATCHES.forEach(function(b){ BY_ID[b.id] = b; });
   var ALL_IDS = BATCHES.map(function(b){ return b.id; });
 
-  function esc(s){ return String(s); }
+  var ESC_MAP = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
+  function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return ESC_MAP[c]; }); }
 
   function shuffle(arr){
     var a = arr.slice();
@@ -1125,10 +1126,19 @@
     });
   }
 
-  function beep(){
+  var sharedAudioCtx = null;
+  function unlockAudio(){
     try{
       var Ctx = window.AudioContext || window.webkitAudioContext;
-      var ctx = new Ctx();
+      if(!sharedAudioCtx) sharedAudioCtx = new Ctx();
+      if(sharedAudioCtx.state === 'suspended') sharedAudioCtx.resume();
+    }catch(e){}
+  }
+  function beep(){
+    try{
+      if(!sharedAudioCtx) return;
+      if(sharedAudioCtx.state === 'suspended') sharedAudioCtx.resume();
+      var ctx = sharedAudioCtx;
       [0, 0.18].forEach(function(delay){
         var o = ctx.createOscillator();
         var g = ctx.createGain();
@@ -1171,8 +1181,17 @@
         activeTimerIntervals.push(intervalId);
         el.classList.add('running'); el.classList.remove('done'); toggleBtn.textContent = 'Pause';
       }
-      function stop(){ if(intervalId){ clearInterval(intervalId); intervalId = null; } el.classList.remove('running'); }
+      function stop(){
+        if(intervalId){
+          clearInterval(intervalId);
+          var idx = activeTimerIntervals.indexOf(intervalId);
+          if(idx !== -1) activeTimerIntervals.splice(idx, 1);
+          intervalId = null;
+        }
+        el.classList.remove('running');
+      }
       toggleBtn.addEventListener('click', function(){
+        unlockAudio();
         if(intervalId){ stop(); toggleBtn.textContent = 'Démarrer'; }
         else { if(remaining <= 0) remaining = duration; start(); }
       });
