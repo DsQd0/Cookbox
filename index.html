@@ -1012,6 +1012,7 @@
   var app = document.getElementById('app');
 
   function renderApp(){
+    stopAllTimers();
     var parts = [renderStockPanel()];
     for(var i=0;i<4;i++) parts.push(renderWeekPanel(i));
     parts.push(renderLibPanel());
@@ -1145,6 +1146,7 @@
     var m = Math.floor(sec/60); var s = sec % 60;
     return (m<10?'0':'')+m+':'+(s<10?'0':'')+s;
   }
+  var activeTimerIntervals = [];
   function bindTimers(){
     document.querySelectorAll('.timer[data-duration]').forEach(function(el){
       var duration = parseInt(el.dataset.duration, 10) || 0;
@@ -1164,7 +1166,11 @@
         }
         render();
       }
-      function start(){ intervalId = setInterval(tick, 1000); el.classList.add('running'); el.classList.remove('done'); toggleBtn.textContent = 'Pause'; }
+      function start(){
+        intervalId = setInterval(tick, 1000);
+        activeTimerIntervals.push(intervalId);
+        el.classList.add('running'); el.classList.remove('done'); toggleBtn.textContent = 'Pause';
+      }
       function stop(){ if(intervalId){ clearInterval(intervalId); intervalId = null; } el.classList.remove('running'); }
       toggleBtn.addEventListener('click', function(){
         if(intervalId){ stop(); toggleBtn.textContent = 'Démarrer'; }
@@ -1172,6 +1178,10 @@
       });
       resetBtn.addEventListener('click', function(){ stop(); remaining = duration; el.classList.remove('done'); toggleBtn.textContent = 'Démarrer'; render(); });
     });
+  }
+  function stopAllTimers(){
+    activeTimerIntervals.forEach(function(id){ clearInterval(id); });
+    activeTimerIntervals = [];
   }
 
   function bindAll(){
